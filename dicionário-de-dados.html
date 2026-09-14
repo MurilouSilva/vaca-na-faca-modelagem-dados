@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dicionário de Dados — Vaca na Faca</title>
+<style>
+  :root {
+    --roxo: #3d2952;
+    --roxo-claro: #6a4f87;
+    --bege: #f0e6d8;
+    --amarelo: #fff4d6;
+    --borda-alerta: #d9a406;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #faf9f7;
+    color: #2b2b2b;
+    margin: 0;
+    padding: 40px 24px;
+    line-height: 1.55;
+  }
+  h1 {
+    text-align: center;
+    color: var(--roxo);
+    margin-bottom: 4px;
+  }
+  p.subtitulo {
+    text-align: center;
+    color: #6b6b6b;
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  p.versao {
+    text-align: center;
+    color: #8a8a8a;
+    font-size: 13px;
+    margin-top: 0;
+    margin-bottom: 40px;
+  }
+  .bloco {
+    max-width: 950px;
+    margin: 0 auto 40px auto;
+  }
+  .bloco h2 {
+    color: var(--roxo);
+    border-bottom: 2px solid var(--roxo);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+  }
+  .bloco h3 {
+    color: var(--roxo-claro);
+    margin-top: 28px;
+    margin-bottom: 6px;
+    font-size: 17px;
+  }
+  .entidade {
+    max-width: 950px;
+    margin: 0 auto 40px auto;
+  }
+  .entidade h2 {
+    color: var(--roxo);
+    border-bottom: 2px solid var(--roxo);
+    padding-bottom: 6px;
+    margin-bottom: 0;
+  }
+  .entidade h3 {
+    color: var(--roxo-claro);
+    margin-top: 30px;
+    margin-bottom: 6px;
+    font-size: 17px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  thead th {
+    background: var(--roxo);
+    color: #ffffff;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+  }
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e0d8;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: var(--bege); }
+  tbody tr:nth-child(odd)  { background: #ffffff; }
+  td.chave { white-space: nowrap; }
+  td.campo { white-space: nowrap; font-family: 'Consolas', monospace; font-size: 13px; }
+  td.tipo  { white-space: nowrap; font-family: 'Consolas', monospace; font-size: 13px; }
+
+  .notacao {
+    background: var(--roxo);
+    color: #f5f0ea;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13.5px;
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin-top: 14px;
+    overflow-x: auto;
+    line-height: 1.7;
+  }
+  .leitura {
+    background: #ffffff;
+    border-left: 4px solid var(--roxo-claro);
+    padding: 10px 16px;
+    margin-top: 10px;
+    font-size: 14.5px;
+  }
+  .indices {
+    background: var(--bege);
+    border-left: 4px solid var(--roxo);
+    padding: 10px 16px;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+  .alerta {
+    background: var(--amarelo);
+    border-left: 4px solid var(--borda-alerta);
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+  code {
+    font-family: 'Consolas', monospace;
+    background: #efeae2;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  .notacao code { background: none; color: inherit; padding: 0; }
+  .tag-e, .tag-m {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    vertical-align: middle;
+  }
+  .tag-e { background: #dfeadd; color: #2f5d2a; }
+  .tag-m { background: #e6dff0; color: #4a2f6b; }
+  ul.limpa { margin-top: 6px; }
+  ul.limpa li { margin-bottom: 6px; }
+  footer {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    margin-top: 30px;
+    max-width: 950px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  nav.sumario {
+    max-width: 950px;
+    margin: 0 auto 40px auto;
+    background: #ffffff;
+    border: 1px solid #e5e0d8;
+    border-radius: 4px;
+    padding: 14px 22px;
+  }
+  nav.sumario a { color: var(--roxo); text-decoration: none; }
+  nav.sumario a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<h1>Dicionário de Dados</h1>
+<p class="subtitulo">Vaca na Faca (Vaca&rsquo;s) &mdash; Modelagem de Banco de Dados &middot; Prof. Cid Andrade</p>
+
+
+<nav class="sumario">
+  <strong>Sumário</strong>
+  <ul class="limpa">
+    <li><a href="#s1">1. Modelo conceitual</a></li>
+    <li><a href="#s2">2. Fluxo de dados (visão de DFD)</a></li>
+    <li><a href="#s3">3. Convenções do dicionário</a></li>
+    <li><a href="#s4">4. Dicionário de dados por entidade</a></li>
+    <li><a href="#s5">5. Log de acesso (metadado operacional)</a></li>
+    <li><a href="#s6">6. Acesso por operação e conformidade com a LGPD</a></li>
+    <li><a href="#s7">7. Pendências que dependem da correção do DER</a></li>
+  </ul>
+</nav>
+
+<!-- ============ 1. MODELO CONCEITUAL ============ -->
+<div class="bloco" id="s1">
+  <h2>1. Modelo conceitual</h2>
+
+  <p>Este modelo representa a operação da <strong>Vaca na Faca</strong>, hamburgueria em funcionamento desde 2019, com
+  equipe de 10 a 14 pessoas e média de 100 pedidos por dia. O cliente faz o pedido pelo site próprio da loja, por um
+  marketplace ou presencialmente; o pedido é montado na cozinha a partir da ficha técnica de cada produto, consumindo
+  ingredientes que a loja compra de fornecedores e mantém em estoque sob controle de estoque mínimo.</p>
+
+  <h3>Entidades</h3>
+  <ul class="limpa">
+    <li><strong>CLIENTE</strong> &mdash; pessoa física que faz pedidos na loja e cujo cadastro e histórico de compras ficam registrados no sistema.</li>
+    <li><strong>PEDIDO</strong> &mdash; evento de venda: o conjunto de produtos solicitado por um cliente em um momento determinado.</li>
+    <li><strong>PRODUTO</strong> &mdash; item vendável do cardápio (hambúrguer, combo, aperitivo ou bebida), com preço próprio.</li>
+    <li><strong>INGREDIENTE</strong> &mdash; insumo comprado e mantido em estoque, consumido na produção dos produtos.</li>
+    <li><strong>FORNECEDOR</strong> &mdash; empresa que vende insumos à loja, com prazo e dias de entrega próprios.</li>
+    <li><strong>FUNCIONARIO</strong> &mdash; pessoa que trabalha na operação, habilitada em uma ou mais praças da cozinha.</li>
+  </ul>
+
+  <h3>Relacionamentos e cardinalidades</h3>
+  <table>
+    <thead>
+      <tr><th>Entidade</th><th>Relaciona-se com</th><th>Relacionamento</th><th>Cardinalidade adotada neste dicionário</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>CLIENTE</td><td>PEDIDO</td><td>Realiza</td>
+        <td>Cliente (0,n) &mdash; Pedido <strong>(1,1)</strong> &rarr; 1:N. Um cliente pode ter nenhum ou muitos pedidos; todo pedido pertence a exatamente um cliente. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td>PEDIDO</td><td>PRODUTO</td><td>Contém</td>
+        <td>Pedido (1,n) &mdash; Produto <strong>(0,n)</strong> &rarr; N:N. Todo pedido contém ao menos um produto; um produto do cardápio pode aparecer em nenhum ou em muitos pedidos. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td>PRODUTO</td><td>INGREDIENTE</td><td>Utiliza</td>
+        <td>Produto (0,n) &mdash; Ingrediente (1,n) &rarr; N:N. É a ficha técnica: um produto usa vários ingredientes e um ingrediente aparece em vários produtos. O (0,n) do lado do Produto cobre itens revendidos sem ficha técnica, como as bebidas. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td>FORNECEDOR</td><td>INGREDIENTE</td><td>Fornece</td>
+        <td>Fornecedor (0,n) &mdash; Ingrediente (0,n) &rarr; N:N. O mesmo insumo pode ser comprado de mais de um fornecedor quando o habitual não entrega no dia necessário. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td>FUNCIONARIO</td><td>INGREDIENTE</td><td>Armazena</td>
+        <td>Funcionário (0,n) &mdash; Ingrediente (1,n) &rarr; N:N. Registra quem conferiu e guardou cada insumo no checklist de estoque. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alerta">
+    <strong>Atenção &mdash; as duas cardinalidades marcadas <span class="tag-m">[M]</span> acima divergem do DER entregue.</strong>
+    O DER atual traz <code>Produto (1,1)</code> em <em>Contém</em> e <code>Pedido (1,n)</code> em <em>Realiza</em>.
+    Este dicionário foi construído sobre a cardinalidade <strong>corrigida</strong>. As mudanças a aplicar no brModelo
+    estão descritas em <code>correcoes_der.md</code> e resumidas na <a href="#s7">seção 7</a>.
+  </div>
+</div>
+
+<!-- ============ 2. FLUXO DE DADOS ============ -->
+<div class="bloco" id="s2">
+  <h2>2. Fluxo de dados (visão de DFD)</h2>
+
+  <p><strong>Venda.</strong> Cliente entra pelo site próprio, por um marketplace ou pelo balcão &rarr; o cadastro é
+  criado ou localizado em <code>CLIENTE</code> &rarr; grava-se um registro em <code>PEDIDO</code> ligado a esse cliente
+  &rarr; cada item escolhido vira uma linha em <code>ITEM_PEDIDO</code>, referenciando <code>PRODUTO</code> &rarr; a
+  comanda segue para o balcão e para a cozinha, onde chapa, montagem e fritadeira trabalham em paralelo &rarr; o
+  despacho confere os itens do pedido e monta o pacote &rarr; a expedição roteiriza e entrega ao motoboy &rarr;
+  <code>TP_STATUS_PEDIDO</code> acompanha essa progressão até <em>entregue</em>.</p>
+
+  <p><strong>Estoque e compras.</strong> O checklist semanal de contagem é feito no domingo à noite &rarr; a contagem é
+  comparada ao <code>QT_ESTOQUE_MINIMO</code> de cada <code>INGREDIENTE</code> &rarr; os insumos abaixo do mínimo entram
+  na ordem de compra de segunda-feira &rarr; a ordem é dirigida ao <code>FORNECEDOR</code> respeitando seu
+  <code>QT_PRAZO_PEDIDO</code> e seus <code>CD_DIA_ENTREGA</code> &rarr; na entrega, o funcionário que confere e guarda o
+  insumo gera um registro em <code>ARMAZENAMENTO</code> &rarr; o consumo de cada insumo na produção é definido pela ficha
+  técnica em <code>PRODUTO_INGREDIENTE</code>.</p>
+
+  <p>Toda leitura ou escrita nessas tabelas é registrada pelo log de acesso do SGBD (<a href="#s5">§5</a>), o que
+  sustenta a auditoria e a conformidade com a LGPD (<a href="#s6">§6</a>).</p>
+</div>
+
+<!-- ============ 3. CONVENÇÕES ============ -->
+<div class="bloco" id="s3">
+  <h2>3. Convenções do dicionário</h2>
+
+  <p><strong>SGBD:</strong> MySQL 8, mecanismo de armazenamento InnoDB &mdash; cuida da persistência dos arquivos de
+  dados, do log de transações (redo/undo) e mantém o índice primário clusterizado por chave.</p>
+
+  <p><strong>Codificação de caracteres:</strong> <code>utf8mb4</code> com collation <code>utf8mb4_0900_ai_ci</code>.
+  Escolhida em vez de <code>latin1</code> por cobrir a acentuação do português sem perda em campos de nome e de texto
+  livre, e por aceitar qualquer caractere Unicode que apareça nas observações que o cliente digita no pedido.</p>
+
+  <h3>Notação formal (símbolos usados neste dicionário)</h3>
+  <table>
+    <thead><tr><th>Símbolo</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">=</td><td>é composto de</td></tr>
+      <tr><td class="campo">+</td><td>e (conecta elementos obrigatórios)</td></tr>
+      <tr><td class="campo">( )</td><td>opcional</td></tr>
+      <tr><td class="campo">{ } , n{ }m</td><td>iteração, com limite mínimo n e máximo m</td></tr>
+      <tr><td class="campo">[ | ]</td><td>escolha obrigatória entre alternativas</td></tr>
+      <tr><td class="campo">/ /</td><td>rótulo de um grupo repetitivo</td></tr>
+      <tr><td class="campo">@</td><td>identificador (chave primária)</td></tr>
+      <tr><td class="campo">* *</td><td>comentário, fora da estrutura formal</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Prefixos</h3>
+  <p>Prefixos-padrão da disciplina: <code>NM_</code> nome, <code>DT_</code> data, <code>ID_</code> identificador (não
+  sofre operação matemática), <code>CD_</code>/<code>CO_</code> código de domínio, <code>QT_</code> quantidade,
+  <code>TP_</code> tipo (categorização), <code>IN_</code> indicador booleano.</p>
+  <p>Este caso usa ainda três prefixos fora dos sete padrão, pelo mesmo princípio de nomenclatura autoexplicativa:</p>
+  <ul class="limpa">
+    <li><code>DS_</code> &mdash; descrição / texto livre. Já aparece no estudo de caso de referência (<code>DS_OBSERVACAO</code>).</li>
+    <li><code>VL_</code> &mdash; valor monetário. Já aparece no estudo de caso de referência (<code>VL_TITULO</code>).</li>
+    <li><code>NU_</code> &mdash; numeração que não sofre operação matemática e que não identifica um registro do sistema
+        (telefone, número de imóvel). Distingue-se de <code>ID_</code>, reservado a códigos do próprio sistema.
+        <span class="tag-m">[M]</span></li>
+  </ul>
+
+  <h3>Tipos físicos</h3>
+  <p><code>integer</code>, <code>varchar(N)</code>, <code>text</code>, <code>numeric(p,e)</code>, <code>date</code>,
+  <code>datetime</code>, <code>char(N)</code>, <code>boolean</code>. Não se usa <code>INTEGER(n)</code> com largura entre
+  parênteses: o <em>display width</em> foi descontinuado no MySQL 8.</p>
+
+  <h3>Origem de cada definição</h3>
+  <p>Cada linha da coluna &ldquo;Significado e relevância&rdquo; traz uma marcação de origem:</p>
+  <ul class="limpa">
+    <li><span class="tag-e">[E]</span> <strong>Evidência</strong> &mdash; extraído do DER, do dicionário anterior ou das
+        transcrições da entrevista de campo com o responsável pela loja (blocos 01 a 06, 02/09/2026).</li>
+    <li><span class="tag-m">[M]</span> <strong>Decisão de modelagem</strong> &mdash; escolha do grupo, necessária para a
+        coerência do modelo, sem respaldo direto em documento: tamanhos de campo, decomposição de atributo composto,
+        separação de tabela para atributo multivalorado, obrigatoriedade e índices.</li>
+  </ul>
+
+  <p><strong>Versão deste dicionário:</strong> v2.0, 14/setembro/2026. Substitui a v1.0, que continha apenas a tabela de
+  atributos por entidade. Qualquer alteração de estrutura deve gerar nova revisão registrada nesta seção; a prática
+  atende, ela própria, ao princípio de rastreabilidade exigido pela LGPD (art. 6º, X).</p>
+</div>
+
+<!-- ============ 4. DICIONÁRIO POR ENTIDADE ============ -->
+<div class="bloco" id="s4">
+  <h2>4. Dicionário de dados por entidade</h2>
+  <p>Cada entidade é apresentada pela definição em notação formal, seguida da leitura dos símbolos usados, da tabela de
+  atributos e dos índices previstos. As tabelas derivadas de atributo multivalorado vêm logo após a entidade de origem;
+  as tabelas que resolvem os relacionamentos N:N estão reunidas no fim da seção.</p>
+</div>
+
+<!-- FUNCIONARIO -->
+<div class="entidade">
+  <h2>FUNCIONARIO</h2>
+  <div class="notacao">
+    FUNCIONARIO = @ID_FUNCIONARIO + NM_FUNCIONARIO + TP_CARGO + DT_ADMISSAO<br>
+    &nbsp;&nbsp;+ [TP_ADMIN_MASTER | TP_GERENTE | TP_COLABORADOR]<br>
+    &nbsp;&nbsp;+ CD_DIA_FOLGA *uma folga semanal, regime 6x1*<br>
+    &nbsp;&nbsp;+ 1{/PRACA_APTA/ = TP_PRACA}4
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>@ID_FUNCIONARIO</code> é o identificador único; os campos
+  conectados por <code>+</code> são todos obrigatórios;
+  <code>[TP_ADMIN_MASTER | TP_GERENTE | TP_COLABORADOR]</code> exige escolher exatamente um perfil de acesso; o
+  comentário entre <code>* *</code> explica por que <code>CD_DIA_FOLGA</code> guarda um único dia, sem fazer parte da
+  estrutura formal; <code>1{/PRACA_APTA/}4</code> é a iteração que registra de uma a quatro praças de cozinha em que o
+  funcionário está habilitado, cada uma como uma ocorrência do grupo rotulado por <code>/ /</code>.</p>
+
+  <table>
+    <thead>
+      <tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização do registro do funcionário; não sofre operação matemática. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_FUNCIONARIO</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
+        <td>Nome completo de quem trabalha na operação. Identifica a pessoa na escala do mês, afixada no quadro de avisos
+        todo primeiro dia do mês. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_CARGO</td><td class="tipo">varchar(30)</td><td class="chave">Sim</td>
+        <td>Função contratada da pessoa na operação &mdash; cozinha, balcão, despacho, expedição, motoboy, gerência ou
+        sociedade. Separa quem é equipe interna com contrato mensal de quem atua na entrega, distinção que a loja já faz
+        no controle de custo de pessoal. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_ADMISSAO</td><td class="tipo">date</td><td class="chave">Sim</td>
+        <td>Data de entrada na equipe. Serve de referência para a curva de aprendizado: a loja acompanha quanto tempo
+        cada pessoa leva para dominar cada praça, e esse tempo se conta a partir da admissão. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_PERFIL_ACESSO</td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
+        <td>Nível de permissão no sistema. <em>Administrador master</em> (dono ou sócio) é o único que acessa relatórios
+        fiscais, faturamento e conta bancária; <em>gerente</em> pode estornar pedido e adicionar ou remover produto;
+        <em>colaborador</em> opera apenas o atendimento e a produção. É o campo que sustenta a matriz de acesso da
+        <a href="#s6">§6</a>. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">CD_DIA_FOLGA</td><td class="tipo">char(3)</td><td class="chave">Sim</td>
+        <td>Dia da semana reservado à folga, no domínio <code>SEG|TER|QUA|QUI|SEX|SAB|DOM</code>. A equipe trabalha em
+        regime 6x1, com uma folga semanal definida na escala mensal &mdash; por isso o campo guarda um único dia, e não
+        uma lista. É o dado que permite fechar a escala sem deixar praça descoberta. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_FUNCIONARIO</code> (clusterizado); índice secundário em
+    <code>CD_DIA_FOLGA</code> (montar a escala do mês exige listar rapidamente quem folga em cada dia); índice
+    secundário em <code>TP_PERFIL_ACESSO</code> (auditar quem detém permissão elevada). <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>PRACA_APTA_FUNCIONARIO <span class="tag-m">[M]</span></h3>
+  <div class="notacao">
+    PRACA_APTA_FUNCIONARIO = @ID_FUNCIONARIO + @TP_PRACA
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> tabela criada para resolver o atributo multivalorado
+  <code>pracas_aptas (1,n)</code> do DER, que no nível lógico não cabe em um único campo. A chave primária é composta
+  pelos dois atributos &mdash; ambos recebem <code>@</code> &mdash; o que impede registrar a mesma praça duas vezes para
+  o mesmo funcionário.</p>
+  <table>
+    <thead>
+      <tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Funcionário habilitado. Referencia <code>FUNCIONARIO</code>. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_PRACA</td><td class="tipo">varchar(20)</td><td class="chave">Sim (PK)</td>
+        <td>Posto de trabalho da cozinha em que a pessoa já está apta: <em>chapa</em>, <em>montagem</em>,
+        <em>fritadeira</em> ou <em>despacho</em>. A loja forma cada colaborador para todas as praças, buscando
+        independência da operação, mas o domínio de cada uma leva tempos diferentes &mdash; há quem pegue a montagem no
+        primeiro dia e leve mais de um mês na chapa. Este registro é o que permite escalar o turno sabendo quem cobre
+        cada posto. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_FUNCIONARIO</code>, <code>TP_PRACA</code>); índice secundário em
+    <code>TP_PRACA</code> (responder &ldquo;quem está apto na chapa hoje?&rdquo;). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- FORNECEDOR -->
+<div class="entidade">
+  <h2>FORNECEDOR</h2>
+  <div class="notacao">
+    FORNECEDOR = @ID_FORNECEDOR + NM_FORNECEDOR<br>
+    &nbsp;&nbsp;+ 0{/TELEFONE_FORNECEDOR/ = NU_TELEFONE}3<br>
+    &nbsp;&nbsp;+ 0{/DIA_ENTREGA_FORNECEDOR/ = CD_DIA_ENTREGA}7<br>
+    &nbsp;&nbsp;+ QT_PRAZO_PEDIDO + [TP_FIXO | TP_EVENTUAL]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>@ID_FORNECEDOR</code> identifica o fornecedor;
+  <code>0{/TELEFONE_FORNECEDOR/}3</code> e <code>0{/DIA_ENTREGA_FORNECEDOR/}7</code> são iterações que começam em zero
+  porque o cadastro pode ser aberto sem contato e sem dias fixos acertados, e o limite de sete nos dias vem de a semana
+  ter sete dias; <code>[TP_FIXO | TP_EVENTUAL]</code> exige escolher exatamente um tipo de vínculo comercial.</p>
+
+  <table>
+    <thead>
+      <tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_FORNECEDOR</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização do registro do fornecedor. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_FORNECEDOR</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
+        <td>Razão social ou nome pelo qual a loja identifica a empresa na ordem de compra. A loja trabalha com 5 a 10
+        fornecedores ativos por semana, o que torna o nome o principal ponto de conferência na chegada da mercadoria.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_PRAZO_PEDIDO</td><td class="tipo">integer</td><td class="chave">Sim</td>
+        <td>Quantidade de dias entre a emissão da ordem de compra e a entrega. É o campo que define a antecedência da
+        compra: se o fornecedor de queijo entrega na quinta e a ordem não sai até terça, o insumo não chega naquela
+        semana. Sem esse número, o cálculo do ponto de pedido não fecha. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_VINCULO</td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
+        <td>Natureza da relação comercial: <em>fixo</em>, quando há parceria e entrega programada recorrente &mdash; caso
+        do fornecedor de proteína, bacon e batata, que entrega toda quinta &mdash; ou <em>eventual</em>, acionado por
+        oportunidade de preço ou quando o fornecedor habitual falha. Orienta para quem ligar primeiro na hora da
+        reposição. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_FORNECEDOR</code> (clusterizado); índice secundário em
+    <code>NM_FORNECEDOR</code> (busca por nome na emissão da ordem de compra). <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>TELEFONE_FORNECEDOR <span class="tag-m">[M]</span></h3>
+  <div class="notacao">
+    TELEFONE_FORNECEDOR = @ID_FORNECEDOR + @NU_TELEFONE
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> tabela criada para resolver o multivalorado <code>telefone (0,n)</code>
+  do DER. Chave primária composta pelos dois campos, o que impede telefone repetido para o mesmo fornecedor.</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_FORNECEDOR</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Fornecedor dono do contato. Referencia <code>FORNECEDOR</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">NU_TELEFONE</td><td class="tipo">varchar(15)</td><td class="chave">Sim (PK)</td>
+        <td>Número de contato usado para emitir a ordem de compra e para cobrar entrega atrasada. Guardado só com
+        dígitos, sem parênteses nem hífen, para não gerar o mesmo número em dois formatos. <span class="tag-m">[M]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_FORNECEDOR</code>, <code>NU_TELEFONE</code>) &mdash; já atende à
+    busca "telefones do fornecedor X", que é o único acesso previsto a esta tabela. <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>DIA_ENTREGA_FORNECEDOR <span class="tag-m">[M]</span></h3>
+  <div class="notacao">
+    DIA_ENTREGA_FORNECEDOR = @ID_FORNECEDOR + @CD_DIA_ENTREGA
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> tabela criada para resolver o multivalorado
+  <code>dias_entrega (0,n)</code> do DER.</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_FORNECEDOR</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Fornecedor a que o dia pertence. Referencia <code>FORNECEDOR</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">CD_DIA_ENTREGA</td><td class="tipo">char(3)</td><td class="chave">Sim (PK)</td>
+        <td>Dia da semana em que aquele fornecedor entrega, no domínio <code>SEG|TER|QUA|QUI|SEX|SAB|DOM</code>. É uma
+        restrição real do mercado de <em>food service</em>: há fornecedor que entrega em qualquer dia, há o que entrega
+        dois dias por semana e há o que atende a região uma única vez por semana. Combinado ao
+        <code>QT_PRAZO_PEDIDO</code>, é o que permite planejar a compra sem furar o estoque.
+        <span class="tag-e">[E]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_FORNECEDOR</code>, <code>CD_DIA_ENTREGA</code>); índice secundário
+    em <code>CD_DIA_ENTREGA</code> (responder &ldquo;quem entrega na quinta?&rdquo; ao montar a ordem de compra da
+    semana). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- INGREDIENTE -->
+<div class="entidade">
+  <h2>INGREDIENTE</h2>
+  <div class="notacao">
+    INGREDIENTE = @ID_INGREDIENTE + NM_INGREDIENTE + CD_UNIDADE_MEDIDA<br>
+    &nbsp;&nbsp;+ [TP_REFRIGERADO | TP_CONGELADO | TP_AMBIENTE]<br>
+    &nbsp;&nbsp;+ QT_ESTOQUE_MINIMO + DT_VALIDADE
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> todos os campos são obrigatórios e estão conectados por <code>+</code>;
+  <code>[TP_REFRIGERADO | TP_CONGELADO | TP_AMBIENTE]</code> exige escolher exatamente uma forma de conservação, que é o
+  que determina onde o insumo é guardado e quanto estoque cabe.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_INGREDIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização do registro do insumo. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_INGREDIENTE</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
+        <td>Nome pelo qual o insumo aparece no checklist de contagem e na ordem de compra &mdash; pão brioche, queijo
+        prato, alface, batata, óleo. É o item que a equipe conta manualmente na prancheta todo domingo à noite.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">CD_UNIDADE_MEDIDA</td><td class="tipo">varchar(10)</td><td class="chave">Sim</td>
+        <td>Unidade em que o insumo é contado e comprado: <code>kg</code>, <code>l</code> ou <code>un</code>. Sem ela, um
+        número solto como &ldquo;15&rdquo; não diz se são 15 quilos de queijo ou 15 pacotes, e a ordem de compra sai
+        errada. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_CONSERVACAO</td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
+        <td>Como o insumo precisa ser guardado: <em>refrigerado</em>, <em>congelado</em> ou <em>ambiente</em>. Determina
+        quanto se pode estocar &mdash; a loja não consegue manter congelado para mais de duas semanas por limitação de
+        espaço físico, enquanto itens de mercearia com validade longa podem ser comprados em volume quando o preço cai.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_ESTOQUE_MINIMO</td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
+        <td>Quantidade que dispara a ordem de compra. Não é um mínimo aspiracional: é o ponto em que ainda dá tempo de
+        pedir e receber antes de acabar, calculado a partir do consumo semanal e do prazo do fornecedor &mdash; o queijo
+        tem consumo de cerca de 40&nbsp;kg por semana e o gatilho fica entre 10 e 15&nbsp;kg. Aceita casas decimais
+        porque insumo a granel é contado em fração de quilo ou litro. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_VALIDADE</td><td class="tipo">date</td><td class="chave">Sim</td>
+        <td>Data de vencimento do insumo em estoque. Sustenta a regra de consumir primeiro o que vence antes: a loja já
+        perdeu produto por a equipe ter aberto o galão de validade mais longa e deixado o mais curto parado no estoque.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_INGREDIENTE</code> (clusterizado); índice secundário em
+    <code>DT_VALIDADE</code> (listar o que vence primeiro na conferência do estoque); índice secundário em
+    <code>TP_CONSERVACAO</code> (separar a contagem por local de armazenamento). <span class="tag-m">[M]</span>
+  </div>
+
+  <div class="alerta">
+    <strong>Observação de modelagem.</strong> <code>DT_VALIDADE</code> está na entidade do insumo, como no DER, mas a
+    validade pertence de fato ao <em>lote</em>: a própria entrevista descreve três galões do mesmo insumo com validades
+    diferentes ao mesmo tempo. Com a estrutura atual só cabe uma validade por insumo. A criação de uma entidade
+    <code>LOTE</code> está registrada como recomendação em <code>correcoes_der.md</code> e não foi aplicada aqui para não
+    introduzir entidade que o DER entregue não contém.
+  </div>
+</div>
+
+<!-- PRODUTO -->
+<div class="entidade">
+  <h2>PRODUTO</h2>
+  <div class="notacao">
+    PRODUTO = @ID_PRODUTO + NM_PRODUTO + (DS_PRODUTO) + VL_PRECO + IN_DISPONIVEL<br>
+    &nbsp;&nbsp;+ [TP_HAMBURGUER | TP_COMBO | TP_APERITIVO | TP_BEBIDA]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>@ID_PRODUTO</code> é o identificador único;
+  <code>(DS_PRODUTO)</code> vem entre parênteses porque nem todo item do cardápio precisa de descrição &mdash; uma bebida
+  se explica pelo nome; <code>[TP_HAMBURGUER | TP_COMBO | TP_APERITIVO | TP_BEBIDA]</code> exige escolher exatamente uma
+  categoria de cardápio.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_PRODUTO</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização do registro do produto. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_PRODUTO</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
+        <td>Nome comercial exibido no cardápio e impresso na comanda, como &ldquo;Vaca na Faca&rdquo;. É por esse nome
+        que a cozinha localiza a ficha técnica a ser montada. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DS_PRODUTO</td><td class="tipo">varchar(200)</td><td class="chave">Não</td>
+        <td>Texto que descreve a composição ao cliente no site antes da compra. Reduz pedido devolvido por expectativa
+        errada e dá ao cliente a informação de que precisa para pedir adicional ou remoção de item.
+        <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">VL_PRECO</td><td class="tipo">numeric(8,2)</td><td class="chave">Sim</td>
+        <td>Preço de venda cheio do item. É a base sobre a qual incidem as promoções, que podem ser subsidiadas pela
+        loja, pelo marketplace ou por ambos &mdash; por isso o preço fica no produto e o desconto não é gravado aqui.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">IN_DISPONIVEL</td><td class="tipo">boolean</td><td class="chave">Sim</td>
+        <td>Indica se o item pode ser vendido agora. Quando um insumo da ficha técnica acaba no meio do expediente, o
+        produto é desligado para sair do cardápio do site, em vez de gerar um pedido que a cozinha terá de recusar.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_CATEGORIA</td><td class="tipo">varchar(30)</td><td class="chave">Sim</td>
+        <td>Agrupamento do item no cardápio: <em>hambúrguer individual</em>, <em>combo</em> (inclui os combos de mais de
+        dois lanches, &ldquo;Casal&rdquo; e &ldquo;Família&rdquo;), <em>aperitivo</em> (batata, onion, nuggets) ou
+        <em>bebida</em>. Define a ordem em que os itens aparecem para o cliente e separa, na cozinha, o que vai para a
+        chapa do que vai para a fritadeira. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_PRODUTO</code> (clusterizado); índice secundário em <code>TP_CATEGORIA</code>
+    (montar o cardápio agrupado por categoria); índice secundário em <code>IN_DISPONIVEL</code> (filtrar o que está fora
+    do ar a cada carregamento do site). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- PEDIDO -->
+<div class="entidade">
+  <h2>PEDIDO</h2>
+  <div class="notacao">
+    PEDIDO = @ID_PEDIDO + DT_HORA_PEDIDO + ID_CLIENTE + VL_TOTAL<br>
+    &nbsp;&nbsp;+ [TP_RECEBIDO | TP_EM_PREPARO | TP_EM_DESPACHO | TP_EM_ROTA | TP_ENTREGUE | TP_CANCELADO]<br>
+    &nbsp;&nbsp;+ [TP_DELIVERY | TP_RETIRADA | TP_LOCAL]<br>
+    &nbsp;&nbsp;+ [TP_SITE | TP_MARKETPLACE | TP_PRESENCIAL]<br>
+    &nbsp;&nbsp;+ (DS_OBSERVACAO_PEDIDO)
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>ID_CLIENTE</code> entra como campo obrigatório porque todo pedido
+  pertence a exatamente um cliente &mdash; é essa obrigatoriedade que realiza o 1:N de <em>Realiza</em>; as três
+  estruturas <code>[ | ]</code> exigem escolher exatamente um valor de situação, um de modalidade de entrega e um de
+  canal de venda; <code>(DS_OBSERVACAO_PEDIDO)</code> fecha a definição como opcional, do mesmo jeito que
+  <code>(DS_OBSERVACAO)</code> no estudo de caso de referência.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_PEDIDO</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização do registro do pedido; é o número da comanda que circula entre balcão, cozinha e
+        despacho. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_HORA_PEDIDO</td><td class="tipo">datetime</td><td class="chave">Sim</td>
+        <td>Momento exato em que o pedido entrou. A hora é indispensável, não acessória: com cerca de 100 pedidos por dia
+        concentrados nos horários de pico, é o que permite medir o tempo entre entrada e entrega e identificar as janelas
+        de &ldquo;correria&rdquo; em que os erros aparecem. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_CLIENTE</td><td class="tipo">integer</td><td class="chave">Sim (FK)</td>
+        <td>Cliente que fez o pedido. Referencia <code>CLIENTE</code>. É o que liga o pedido ao histórico de compras e
+        permite ao sistema responder quanto aquele cliente gastou no mês e o que ele mais compra.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">VL_TOTAL</td><td class="tipo">numeric(8,2)</td><td class="chave">Sim</td>
+        <td>Valor cobrado no pedido fechado. Alimenta o fechamento de caixa do dia e o acompanhamento de gasto por
+        cliente. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_STATUS_PEDIDO</td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
+        <td>Etapa em que o pedido está dentro do fluxo de produção: recebido, em preparo na cozinha, em despacho
+        (montagem do pacote), em rota com o motoboy, entregue ou cancelado. É o campo que informa ao balcão onde está
+        cada comanda sem precisar perguntar à cozinha. Cancelamento e estorno são restritos a gerente ou administrador
+        master. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_ENTREGA</td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
+        <td>Modalidade de saída do pedido: <em>delivery</em>, que exige roteirização e motoboy; <em>retirada</em>, em que
+        o cliente busca no balcão; ou <em>local</em>, consumido na loja. Define se o endereço do cliente é necessário e
+        se o pedido entra na fila da expedição. <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_CANAL_VENDA</td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
+        <td>Por onde a venda foi fechada: <em>site próprio</em> da loja, <em>marketplace</em> (iFood, Keeta, 99) ou
+        <em>presencial</em>. Importa porque a margem muda em cada canal &mdash; o marketplace faz repasse e pode
+        subsidiar promoção, enquanto no site o pagamento vem por Pix direto. O WhatsApp não é canal de venda: serve de
+        captação e redireciona o cliente ao site. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DS_OBSERVACAO_PEDIDO</td><td class="tipo">varchar(200)</td><td class="chave">Não</td>
+        <td>Texto livre com a personalização pedida pelo cliente &mdash; tirar ou acrescentar item, ponto da carne,
+        instrução de entrega. É a informação que chega à montagem e que, quando ignorada na correria, compromete a
+        experiência do pedido inteiro. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_PEDIDO</code> (clusterizado); índice em <code>ID_CLIENTE</code> (abrir o
+    histórico de um cliente); índice em <code>DT_HORA_PEDIDO</code> (fechamento de caixa e relatório por período); índice
+    em <code>TP_STATUS_PEDIDO</code> (listar o que ainda está em produção). <span class="tag-m">[M]</span>
+  </div>
+
+  <div class="alerta">
+    <strong>Depende da correção do DER.</strong> A FK <code>ID_CLIENTE</code> em <code>PEDIDO</code> só é válida com
+    <em>Realiza</em> em Cliente (0,n) &mdash; Pedido (1,1). No DER entregue, o lado do Pedido está como (1,n), o que
+    tornaria o relacionamento N:N e exigiria uma tabela associativa em vez desta FK. Ver <a href="#s7">§7</a>.
+  </div>
+</div>
+
+<!-- CLIENTE -->
+<div class="entidade">
+  <h2>CLIENTE</h2>
+  <div class="notacao">
+    CLIENTE = @ID_CLIENTE + NM_CLIENTE<br>
+    &nbsp;&nbsp;+ 0{/TELEFONE_CLIENTE/ = NU_TELEFONE}3<br>
+    &nbsp;&nbsp;+ (/ENDERECO/ = NM_BAIRRO + NM_RUA + NU_NUMERO)<br>
+    &nbsp;&nbsp;+ (DT_NASCIMENTO) + DT_CADASTRO
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>/ENDERECO/</code> é o rótulo do grupo que decompõe o atributo
+  composto do DER em três elementos de dado, e o grupo inteiro vem entre <code>( )</code> porque pedido de retirada ou de
+  consumo no local não exige endereço; <code>0{/TELEFONE_CLIENTE/}3</code> permite de zero a três contatos;
+  <code>(DT_NASCIMENTO)</code> é opcional porque o cliente não é obrigado a informar a data para comprar.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_CLIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização do cadastro do cliente. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_CLIENTE</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
+        <td>Nome pelo qual o cliente é chamado no atendimento e identificado no pacote na hora do despacho. É um dos
+        dados básicos que o sistema de gestão da loja já registra hoje. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_BAIRRO</td><td class="tipo">varchar(60)</td><td class="chave">Não</td>
+        <td>Bairro do endereço de entrega. Separado dos demais campos porque é por bairro que a expedição agrupa pedidos
+        ao roteirizar a saída do motoboy. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_RUA</td><td class="tipo">varchar(120)</td><td class="chave">Não</td>
+        <td>Logradouro do endereço de entrega. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NU_NUMERO</td><td class="tipo">varchar(10)</td><td class="chave">Não</td>
+        <td>Número do imóvel. Guardado como texto, e não como inteiro, porque aceita valores como &ldquo;123A&rdquo; e
+        &ldquo;s/n&rdquo;, e porque número de casa nunca entra em cálculo. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_NASCIMENTO</td><td class="tipo">date</td><td class="chave">Não</td>
+        <td>Data de nascimento informada pelo cliente. O sistema de gestão da loja já usa o aniversário como gancho de
+        relacionamento; por ser dado coletado para finalidade de marketing, e não para executar a venda, fica opcional e
+        depende de consentimento (ver <a href="#s6">§6</a>). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_CADASTRO</td><td class="tipo">date</td><td class="chave">Sim</td>
+        <td>Data em que o cliente entrou na base. Marca o início da trajetória que a loja acompanha &mdash; o que já
+        comprou, com que frequência volta &mdash; e é o marco a partir do qual se conta o prazo de retenção do cadastro.
+        <span class="tag-m">[M]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_CLIENTE</code> (clusterizado); índice secundário em <code>NM_CLIENTE</code>
+    (localizar cadastro no atendimento); índice secundário em <code>NM_BAIRRO</code> (agrupar entregas por região na
+    roteirização). <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>TELEFONE_CLIENTE <span class="tag-m">[M]</span></h3>
+  <div class="notacao">
+    TELEFONE_CLIENTE = @ID_CLIENTE + @NU_TELEFONE
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> tabela criada para resolver o multivalorado <code>telefone (0,n)</code>
+  do DER, que no nível lógico não cabe em um <code>varchar</code> único.</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_CLIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Cliente dono do contato. Referencia <code>CLIENTE</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">NU_TELEFONE</td><td class="tipo">varchar(15)</td><td class="chave">Sim (PK)</td>
+        <td>Contato do cliente. É o canal por onde a loja faz captação por WhatsApp antes de redirecionar a venda para o
+        site, e por onde o motoboy resolve problema de endereço na entrega. Guardado só com dígitos para não duplicar o
+        mesmo número em formatos diferentes. <span class="tag-e">[E]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_CLIENTE</code>, <code>NU_TELEFONE</code>); índice secundário em
+    <code>NU_TELEFONE</code> (localizar o cadastro pelo telefone, que é como o cliente chega pelo WhatsApp).
+    <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- TABELAS ASSOCIATIVAS -->
+<div class="entidade">
+  <h2>Tabelas associativas (resolução dos relacionamentos N:N)</h2>
+  <p>Depois da correção de cardinalidade descrita na <a href="#s7">§7</a>, quatro dos cinco relacionamentos do DER são
+  de muitos-para-muitos e exigem tabela própria. A exceção é <em>Realiza</em>, que vira 1:N e se resolve pela FK
+  <code>ID_CLIENTE</code> já declarada em <code>PEDIDO</code>.</p>
+
+  <h3>ITEM_PEDIDO &mdash; relacionamento <em>Contém</em></h3>
+  <div class="notacao">
+    ITEM_PEDIDO = @ID_PEDIDO + @ID_PRODUTO + QT_ITEM
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> chave primária composta pelas duas FKs; <code>QT_ITEM</code> é atributo do
+  próprio relacionamento, não de <code>PEDIDO</code> nem de <code>PRODUTO</code>. É esta tabela que permite ao mesmo
+  produto aparecer em muitos pedidos ao longo do tempo &mdash; o que o DER entregue impede, ao marcar Produto como
+  (1,1).</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_PEDIDO</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Pedido a que o item pertence. Referencia <code>PEDIDO</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">ID_PRODUTO</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Produto pedido. Referencia <code>PRODUTO</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">QT_ITEM</td><td class="tipo">integer</td><td class="chave">Sim</td>
+        <td>Quantas unidades daquele produto o pedido leva. Sem esse número o <code>VL_TOTAL</code> do pedido não fecha, e
+        o despacho não tem como conferir se o pacote está completo &mdash; conferência que a loja faz item a item antes de
+        mandar para a expedição. <span class="tag-m">[M]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_PEDIDO</code>, <code>ID_PRODUTO</code>); índice secundário em
+    <code>ID_PRODUTO</code> (apurar quanto cada item do cardápio vendeu no período). <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>PRODUTO_INGREDIENTE &mdash; relacionamento <em>Utiliza</em> (ficha técnica)</h3>
+  <div class="notacao">
+    PRODUTO_INGREDIENTE = @ID_PRODUTO + @ID_INGREDIENTE + QT_UTILIZADA
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> esta tabela é a ficha técnica da loja em forma de dado. A chave primária
+  composta garante que cada insumo apareça uma única vez na receita de cada produto.</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_PRODUTO</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Produto cuja receita está sendo descrita. Referencia <code>PRODUTO</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">ID_INGREDIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Insumo que entra na receita. Referencia <code>INGREDIENTE</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">QT_UTILIZADA</td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
+        <td>Quanto daquele insumo entra em uma unidade do produto, na unidade de medida do próprio insumo. É o número da
+        ficha técnica que padroniza a montagem &mdash; 180&nbsp;g de carne, 30&nbsp;g de queijo prato, 30&nbsp;g de
+        maionese por acionamento da bisnaga. Aceita decimais porque a receita trabalha em fração de quilo.
+        <span class="tag-e">[E]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_PRODUTO</code>, <code>ID_INGREDIENTE</code>); índice secundário em
+    <code>ID_INGREDIENTE</code> (descobrir quais lanches tirar do cardápio quando um insumo acaba).
+    <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>FORNECEDOR_INGREDIENTE &mdash; relacionamento <em>Fornece</em></h3>
+  <div class="notacao">
+    FORNECEDOR_INGREDIENTE = @ID_FORNECEDOR + @ID_INGREDIENTE
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> tabela sem atributos próprios; existe apenas para registrar quais insumos
+  cada fornecedor é capaz de entregar.</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_FORNECEDOR</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Fornecedor. Referencia <code>FORNECEDOR</code>. <span class="tag-m">[M]</span></td></tr>
+      <tr><td class="campo">ID_INGREDIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Insumo que aquele fornecedor entrega. Referencia <code>INGREDIENTE</code>. Guardar a lista completa importa
+        porque, quando o fornecedor habitual não entrega no dia necessário, a loja precisa saber de imediato quem mais tem
+        aquele item, ainda que de outra marca. <span class="tag-e">[E]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_FORNECEDOR</code>, <code>ID_INGREDIENTE</code>); índice secundário em
+    <code>ID_INGREDIENTE</code> (listar fornecedores alternativos de um insumo em falta). <span class="tag-m">[M]</span>
+  </div>
+
+  <h3>ARMAZENAMENTO &mdash; relacionamento <em>Armazena</em></h3>
+  <div class="notacao">
+    ARMAZENAMENTO = @ID_FUNCIONARIO + @ID_INGREDIENTE
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> tabela sem atributos próprios, fiel ao DER, que não registra data nem
+  quantidade nesse relacionamento. Ver a ressalva na <a href="#s7">§7</a>.</p>
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr><td class="campo">ID_FUNCIONARIO</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Funcionário responsável por conferir e guardar o insumo. Referencia <code>FUNCIONARIO</code>. Dá nome ao
+        responsável pela conferência, rastreabilidade que a loja hoje não tem. <span class="tag-e">[E]</span></td></tr>
+      <tr><td class="campo">ID_INGREDIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK, FK)</td>
+        <td>Insumo armazenado. Referencia <code>INGREDIENTE</code>. <span class="tag-m">[M]</span></td></tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK composta (<code>ID_FUNCIONARIO</code>, <code>ID_INGREDIENTE</code>).
+    <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- ============ 5. LOG DE ACESSO ============ -->
+<div class="bloco" id="s5">
+  <h2>5. Log de acesso (metadado operacional)</h2>
+  <p>Todas as tabelas ficam sob o mesmo mecanismo de auditoria do SGBD: o plugin <code>audit_log</code> do MySQL,
+  configurado para gravar em formato JSON no caminho definido por <code>audit_log_file</code>. Na ausência do plugin, a
+  alternativa é o log geral (<code>general_log=ON</code>, <code>log_output=TABLE</code>), consultável em
+  <code>mysql.general_log</code>. A retenção e a rotação do log seguem política própria, independente da retenção dos
+  dados de negócio.</p>
+  <p>O log responde a uma lacuna que a própria loja aponta: hoje, quando um pedido sai errado, não há como saber quem foi
+  o responsável sem perguntar à equipe. Registrar quem leu e quem alterou cada pedido e cada contagem de estoque é o
+  primeiro passo para essa rastreabilidade, e é também o que sustenta o princípio de responsabilização da LGPD
+  (art. 6º, X). <span class="tag-e">[E]</span></p>
+</div>
+
+<!-- ============ 6. LGPD ============ -->
+<div class="bloco" id="s6">
+  <h2>6. Acesso por operação e conformidade com a LGPD (metadado administrativo)</h2>
+
+  <p>Os papéis abaixo são os que a loja já pratica: <strong>administrador master</strong> (dono ou sócio),
+  <strong>gerente</strong>, <strong>colaborador</strong> (cozinha e balcão) e <strong>expedição/motoboy</strong>.
+  <span class="tag-e">[E]</span></p>
+
+  <table>
+    <thead>
+      <tr><th>Tabela</th><th>LER</th><th>INSERIR</th><th>ATUALIZAR</th><th>APAGAR</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>CLIENTE</code><br><code>TELEFONE_CLIENTE</code></td>
+        <td>Colaborador (atendimento), Gerente, Admin master</td>
+        <td>Colaborador, Gerente</td>
+        <td>Colaborador, Gerente</td>
+        <td>Nenhum papel &mdash; apenas anonimização ao fim da retenção</td>
+      </tr>
+      <tr>
+        <td><code>PEDIDO</code><br><code>ITEM_PEDIDO</code></td>
+        <td>Colaborador, Expedição (só o pedido em rota), Gerente, Admin master</td>
+        <td>Colaborador</td>
+        <td>Colaborador (situação); cancelamento e estorno só Gerente ou Admin master</td>
+        <td>Nenhum papel &mdash; pedido errado se cancela, não se apaga</td>
+      </tr>
+      <tr>
+        <td><code>FUNCIONARIO</code><br><code>PRACA_APTA_FUNCIONARIO</code></td>
+        <td>Gerente, Admin master</td>
+        <td>Admin master</td>
+        <td>Admin master (perfil de acesso); Gerente (praças aptas)</td>
+        <td>Admin master (desligamento)</td>
+      </tr>
+      <tr>
+        <td><code>PRODUTO</code><br><code>PRODUTO_INGREDIENTE</code></td>
+        <td>Todos os papéis</td>
+        <td>Gerente, Admin master</td>
+        <td>Colaborador (só <code>IN_DISPONIVEL</code>); preço e ficha técnica só Gerente ou Admin master</td>
+        <td>Admin master</td>
+      </tr>
+      <tr>
+        <td><code>INGREDIENTE</code><br><code>ARMAZENAMENTO</code></td>
+        <td>Colaborador, Gerente, Admin master</td>
+        <td>Colaborador (contagem do checklist)</td>
+        <td>Colaborador (contagem); estoque mínimo só Gerente ou Admin master</td>
+        <td>Admin master</td>
+      </tr>
+      <tr>
+        <td><code>FORNECEDOR</code> e tabelas ligadas</td>
+        <td>Gerente, Admin master</td>
+        <td>Gerente, Admin master</td>
+        <td>Gerente, Admin master</td>
+        <td>Admin master</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Dados pessoais tratados</h3>
+  <p><code>CLIENTE</code>, <code>TELEFONE_CLIENTE</code>, <code>FUNCIONARIO</code> e
+  <code>PRACA_APTA_FUNCIONARIO</code> contêm dado pessoal na acepção do art. 5º, I da LGPD. <strong>Nenhuma tabela deste
+  modelo contém dado pessoal sensível</strong> (art. 5º, II): não há informação de saúde, origem racial, convicção
+  religiosa ou filiação sindical.</p>
+
+  <ul class="limpa">
+    <li><strong>Cliente &mdash; nome, telefone e endereço.</strong> Base legal: execução de contrato (art. 7º, V). São os
+    dados sem os quais a entrega não acontece. Acesso restrito a quem atende e a quem entrega, e a expedição vê apenas o
+    pedido que está em rota.</li>
+    <li><strong>Cliente &mdash; data de nascimento.</strong> Base legal distinta: consentimento (art. 7º, I), porque é
+    coletada para ação de relacionamento e não para executar a venda. Por isso o campo é opcional; a recusa do cliente não
+    pode impedir a compra.</li>
+    <li><strong>Funcionário.</strong> Base legal: cumprimento de obrigação legal e execução do contrato de trabalho
+    (art. 7º, II e V). <code>TP_PERFIL_ACESSO</code> é, ele próprio, um controle de segurança: é o campo que restringe
+    faturamento e conta bancária ao administrador master.</li>
+    <li><strong>Retenção e eliminação.</strong> Encerrado o prazo de guarda, o cadastro de cliente é
+    <strong>anonimizado</strong>, não apagado: o histórico de venda continua servindo à estatística de consumo sem
+    identificar a pessoa. Nenhum papel recebe permissão de <em>DELETE</em> sobre dado pessoal de cliente.</li>
+    <li><strong>Exemplos.</strong> Qualquer valor de exemplo usado na documentação deste trabalho é fictício, ainda que
+    coerente com a operação observada em campo. Nenhum dado real de cliente ou de funcionário da loja foi transcrito para
+    este dicionário.</li>
+  </ul>
+</div>
+
+<!-- ============ 7. PENDÊNCIAS ============ -->
+<div class="bloco" id="s7">
+  <h2>7. Pendências que dependem da correção do DER</h2>
+  <p>Este dicionário foi escrito sobre o modelo <strong>corrigido</strong>. Enquanto o arquivo do brModelo não for
+  atualizado, os pontos abaixo ficam divergentes entre os dois documentos. O detalhamento com antes/depois está em
+  <code>correcoes_der.md</code>.</p>
+  <table>
+    <thead><tr><th>#</th><th>Ponto no DER</th><th>Como está hoje</th><th>Como este dicionário assume</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><em>Contém</em>, lado Produto</td><td><code>(1,1)</code></td>
+        <td><code>(0,n)</code> &mdash; sem isso, um item do cardápio só poderia ser vendido uma vez</td></tr>
+      <tr><td>2</td><td><em>Realiza</em>, lado Pedido</td><td><code>(1,n)</code></td>
+        <td><code>(1,1)</code> &mdash; sem isso, um mesmo pedido teria vários clientes</td></tr>
+      <tr><td>3</td><td>Atributo <code>dt_hota_pedido</code></td><td>erro de digitação</td>
+        <td><code>DT_HORA_PEDIDO</code></td></tr>
+      <tr><td>4</td><td>Atributo <code>pracas_aptas</code></td><td>círculo sólido com rótulo (1,n)</td>
+        <td>multivalorado &mdash; círculo tracejado, como <code>telefone</code></td></tr>
+      <tr><td>5</td><td>Atributo <code>endereco</code></td><td>um único filho &ldquo;bairro,rua,numero&rdquo;</td>
+        <td>três atributos filhos separados</td></tr>
+      <tr><td>6</td><td>Relacionamentos <em>Contém</em> e <em>Utiliza</em></td><td>sem atributo próprio</td>
+        <td><code>QT_ITEM</code> e <code>QT_UTILIZADA</code> desenhados no losango</td></tr>
+      <tr><td>7</td><td>Atributo <code>dias_folga</code></td><td>simples, sem cardinalidade</td>
+        <td>mantido como está &mdash; a entrevista confirma uma folga semanal</td></tr>
+      <tr><td>8</td><td>FUNCIONARIO &times; PEDIDO</td><td>não existe relacionamento</td>
+        <td>não aplicado &mdash; registrado apenas como recomendação</td></tr>
+      <tr><td>9</td><td><code>dt_validade</code> em INGREDIENTE</td><td>uma validade por insumo</td>
+        <td>mantido como está &mdash; entidade <code>LOTE</code> fica como recomendação</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  Dicionário de Dados v2.0 &mdash; Vaca na Faca (Vaca&rsquo;s) &middot; Entrega 1, Modelagem de Banco de Dados &middot;
+  Prof. Cid Andrade &middot; Estrutura conforme <em>02-03g_Exemplo_Dicionario_Dados</em>.<br>
+  Fontes: DER do grupo (brModelo), transcrições da entrevista de campo de 02/09/2026 (blocos 01 a 06) e material da
+  disciplina.
+</footer>
+
+</body>
+</html>

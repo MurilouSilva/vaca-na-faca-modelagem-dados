@@ -183,7 +183,6 @@
     <li><a href="#s4">4. Dicionário de dados por entidade</a></li>
     <li><a href="#s5">5. Log de acesso (metadado operacional)</a></li>
     <li><a href="#s6">6. Acesso por operação e conformidade com a LGPD</a></li>
-    <li><a href="#s7">7. Pendências que dependem da correção do DER</a></li>
   </ul>
 </nav>
 
@@ -1014,37 +1013,6 @@
     coerente com a operação observada em campo. Nenhum dado real de cliente ou de funcionário da loja foi transcrito para
     este dicionário.</li>
   </ul>
-</div>
-
-<!-- ============ 7. PENDÊNCIAS ============ -->
-<div class="bloco" id="s7">
-  <h2>7. Pendências que dependem da correção do DER</h2>
-  <p>Este dicionário foi escrito sobre o modelo <strong>corrigido</strong>. Enquanto o arquivo do brModelo não for
-  atualizado, os pontos abaixo ficam divergentes entre os dois documentos. O detalhamento com antes/depois está em
-  <code>correcoes_der.md</code>.</p>
-  <table>
-    <thead><tr><th>#</th><th>Ponto no DER</th><th>Como está hoje</th><th>Como este dicionário assume</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td><em>Contém</em>, lado Produto</td><td><code>(1,1)</code></td>
-        <td><code>(0,n)</code> &mdash; sem isso, um item do cardápio só poderia ser vendido uma vez</td></tr>
-      <tr><td>2</td><td><em>Realiza</em>, lado Pedido</td><td><code>(1,n)</code></td>
-        <td><code>(1,1)</code> &mdash; sem isso, um mesmo pedido teria vários clientes</td></tr>
-      <tr><td>3</td><td>Atributo <code>dt_hota_pedido</code></td><td>erro de digitação</td>
-        <td><code>DT_HORA_PEDIDO</code></td></tr>
-      <tr><td>4</td><td>Atributo <code>pracas_aptas</code></td><td>círculo sólido com rótulo (1,n)</td>
-        <td>multivalorado &mdash; círculo tracejado, como <code>telefone</code></td></tr>
-      <tr><td>5</td><td>Atributo <code>endereco</code></td><td>um único filho &ldquo;bairro,rua,numero&rdquo;</td>
-        <td>três atributos filhos separados</td></tr>
-      <tr><td>6</td><td>Relacionamentos <em>Contém</em> e <em>Utiliza</em></td><td>sem atributo próprio</td>
-        <td><code>QT_ITEM</code> e <code>QT_UTILIZADA</code> desenhados no losango</td></tr>
-      <tr><td>7</td><td>Atributo <code>dias_folga</code></td><td>simples, sem cardinalidade</td>
-        <td>mantido como está &mdash; a entrevista confirma uma folga semanal</td></tr>
-      <tr><td>8</td><td>FUNCIONARIO &times; PEDIDO</td><td>não existe relacionamento</td>
-        <td>não aplicado &mdash; registrado apenas como recomendação</td></tr>
-      <tr><td>9</td><td><code>dt_validade</code> em INGREDIENTE</td><td>uma validade por insumo</td>
-        <td>mantido como está &mdash; entidade <code>LOTE</code> fica como recomendação</td></tr>
-    </tbody>
-  </table>
 </div>
 
 <footer>

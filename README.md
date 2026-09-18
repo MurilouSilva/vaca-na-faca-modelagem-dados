@@ -25,6 +25,7 @@
 - **Justificativa da escolha:** A organização foi escolhida por fácil acesso por conta do dono ser primo de um dos integrantes.
 - **Evidências da organização:** ![foto tirada na cozinha do vaca na faca com o Henrique](imagem%20hamburgueria.jpeg)
   Endereço: Rua Pedro Meira, 560 - Vila Curuçá, São Paulo - SP, 08030-500
+  Contato (Instagram da Loja): @vacanafacaburguerhouse
 
 ---
 

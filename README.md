@@ -15,15 +15,16 @@
 ## 1. Caracterização da Organização
 *(vale 7,5% — Dimensão Conceitual)*
 
-- **Nome e natureza da organização:** A organização escolhida foi uma Hamburgueria
-- **Contexto e porte:** É uma hamburguria com fins lucrativos, esta em operação desde 2019, conta com 10/14 funcionários, com um volume aproximado de 100 pedidos por dia envolvendo Ifood, 99 e Keeta. O WhatsApp funciona apenas como canal de captação.
+- **Nome e natureza da organização:** A organização escolhida foi uma Hamburgueria chamada Vaca Na Faca, cujo o dono é o Henrique
+- **Contexto e porte:** É uma hamburguria com fins lucrativos, está em operação desde 2019, conta com 10/14 funcionários, com um volume aproximado de 100 pedidos por dia envolvendo Ifood, 99 e Keeta. O WhatsApp funciona apenas como canal de captação.
 - **Problemas e necessidades identificados:** 
   1. Não há como identificar o responsável quando um pedido sai errado.
   2. Não existe medição de tarefas/missões da equipe
   3. Não há acompanhamentos da curva de aprendizado.
   4. Mesmo a organização ja tendo um sistema próprio, o checklist de estoque é feito manualmente no domingo a noite por conta de hábito operacional.
 - **Justificativa da escolha:** A organização foi escolhida por fácil acesso por conta do dono ser primo de um dos integrantes.
-- **Evidências da organização:** ![foto](imagem%20hamburgueria.jpeg)
+- **Evidências da organização:** ![foto tirada na cozinha do vaca na faca com o Henrique](imagem%20hamburgueria.jpeg)
+  Endereço: Rua Pedro Meira, 560 - Vila Curuçá, São Paulo - SP, 08030-500
 
 ---
 
@@ -87,10 +88,45 @@ Para cada entidade identificada, liste:
 ## 6. Modelagem Conceitual (Entidades, Atributos, Relacionamentos)
 *(vale 7,5% na dimensão conceitual)*
 
-- **Entidades reconhecidas:** *liste e justifique brevemente cada uma.*
-- **Atributos e classificações:** *quais atributos pertencem a cada entidade.*
-- **Relacionamentos pertinentes:** *como as entidades se conectam.*
+- **Entidades reconhecidas:
+| Entidade | Justificativa |
+|---|---|
+| **Cliente** | Quem realiza os pedidos, precisa ser identificado para histórico e entrega. |
+| **Pedido** | Registro central da operação - cerca de 100 por dia, em quatro canais diferentes. |
+| **Produto** | Itens do cardápio vendidos ao cliente. |
+| **Ingrediente** | Insumos controlados em estoque, com validade e tipo de conservação. |
+| **Fornecedor** | Origem dos insumos, com dias fixos de entrega e prazo de pedido. |
+| **Funcionário** | Equipe de 10 a 14 pessoas, com cargos, praças e escala. |
+
+- **Atributos e classificações:**
+Cliente: id_cliente (identificador), nm_cliente, telefone (multivalorado), endereco (composto: bairro, rua, numero), dt_nascimento, dt_cadastro.
+
+Pedido: id_pedido (identificador), dt_hora_pedido, vl_total, st_pedido, tp_entrega, obs_pedido, cn_venda.
+
+Produto: id_produto (identificador), nm_produto, ds_produto, vl_preco, st_disponivel, categoria.
+
+Ingrediente: id_ingrediente (identificador), nm_ingrediente, un_medida, tp_conservacao, qt_estoque_minimo, dt_validade.
+
+Fornecedor: id_fornecedor (identificador), nm_fornecedor, telefone (multivalorado), dias_entrega (multivalorado), pz_pedido, tp_vinculo.
+
+Funcionário: id_funcionario (identificador), nm_funcionario, cargo, dt_admissao, perfil_acesso, dias_folga, pracas_aptas (multivalorado).
+
+- **Relacionamentos pertinentes:**
+| Relacionamento | Cardinalidade | Atributo próprio |
+|---|---|---|
+| Cliente **Realiza** Pedido | (0,n) - (1,1) | - |
+| Produto **Contém** Pedido | (0,n) - (1,n) | qt_item |
+| Ingrediente **Utiliza** Produto | (1,n) - (0,n) | qt_utilizada |
+| Fornecedor **Fornece** Ingrediente | (0,n) - (0,n) | - |
+| Funcionário **Armazena** Ingrediente | (0,n) - (1,n) | - |
+
 - **Restrições e políticas organizacionais aplicadas ao modelo.**
+1. qt_estoque_minimo no Ingrediente sustenta a regra de abertura de ordem de compra quando o insumo atinge o mínimo.
+2. dt_validade e tp_conservacao sustentam a regra de uso por validade mais curta (FIFO) e o limite de duas semanas para congelados.
+3. perfil_acesso no Funcionário sustenta a política de que apenas o administrador pode cancelar, estornar e alterar dados fiscais.
+4. dias_folga e pracas_aptas refletem a escala 6x1 e a distribuição da equipe entre as quatro praças
+cn_venda no Pedido registra o canal de origem (site próprio, iFood, Keeta, 99Food).
+5. Endereco decomposto em bairro, rua e número permite consultas por região para a operação de delivery.
 
 ---
 
@@ -103,7 +139,7 @@ Para cada entidade identificada, liste:
 ## 8. Justificativa Técnica
 *(vale 7,5% — sozinho, é o subcritério de maior peso dentro da Dimensão Conceitual)*
 
-As entidades do modelo(Funcionário, fornecedor, ingrediente, produto, pedido e cliente) representam os objetos centrais da operação, todos indentificamos na entrevista. Os relacionamentos seguem a lógica real do negócio. As cardianalidades refletem restrições, por exemplo, um pedido pertence a exatamente um cliente, mas um cliente pode fazer varios pedidos ao longo do tempo.
+As entidades do modelo(Funcionário, fornecedor, ingrediente, produto, pedido e cliente) representam os objetos centrais da operação e fazem parte do critério de existência independente, todos indentificamos na entrevista. Os relacionamentos seguem a lógica real do negócio. As cardianalidades refletem restrições, por exemplo, um pedido pertence a exatamente um cliente, mas um cliente pode fazer varios pedidos ao longo do tempo.
 
 ---
 

@@ -234,12 +234,6 @@
     </tbody>
   </table>
 
-  <div class="alerta">
-    <strong>Atenção &mdash; as duas cardinalidades marcadas <span class="tag-m">[M]</span> acima divergem do DER entregue.</strong>
-    O DER atual traz <code>Produto (1,1)</code> em <em>Contém</em> e <code>Pedido (1,n)</code> em <em>Realiza</em>.
-    Este dicionário foi construído sobre a cardinalidade <strong>corrigida</strong>. As mudanças a aplicar no brModelo
-    estão descritas em <code>correcoes_der.md</code> e resumidas na <a href="#s7">seção 7</a>.
-  </div>
 </div>
 
 <!-- ============ 2. FLUXO DE DADOS ============ -->
@@ -582,13 +576,6 @@
     <code>TP_CONSERVACAO</code> (separar a contagem por local de armazenamento). <span class="tag-m">[M]</span>
   </div>
 
-  <div class="alerta">
-    <strong>Observação de modelagem.</strong> <code>DT_VALIDADE</code> está na entidade do insumo, como no DER, mas a
-    validade pertence de fato ao <em>lote</em>: a própria entrevista descreve três galões do mesmo insumo com validades
-    diferentes ao mesmo tempo. Com a estrutura atual só cabe uma validade por insumo. A criação de uma entidade
-    <code>LOTE</code> está registrada como recomendação em <code>correcoes_der.md</code> e não foi aplicada aqui para não
-    introduzir entidade que o DER entregue não contém.
-  </div>
 </div>
 
 <!-- PRODUTO -->
@@ -724,11 +711,7 @@
     em <code>TP_STATUS_PEDIDO</code> (listar o que ainda está em produção). <span class="tag-m">[M]</span>
   </div>
 
-  <div class="alerta">
-    <strong>Depende da correção do DER.</strong> A FK <code>ID_CLIENTE</code> em <code>PEDIDO</code> só é válida com
-    <em>Realiza</em> em Cliente (0,n) &mdash; Pedido (1,1). No DER entregue, o lado do Pedido está como (1,n), o que
-    tornaria o relacionamento N:N e exigiria uma tabela associativa em vez desta FK. Ver <a href="#s7">§7</a>.
-  </div>
+  
 </div>
 
 <!-- CLIENTE -->
@@ -1017,7 +1000,7 @@
 
 <footer>
   Dicionário de Dados v2.0 &mdash; Vaca na Faca (Vaca&rsquo;s) &middot; Entrega 1, Modelagem de Banco de Dados &middot;
-  Prof. Cid Andrade &middot; Estrutura conforme <em>02-03g_Exemplo_Dicionario_Dados</em>.<br>
+  Prof. Cid Andrade &middot;<br>
   Fontes: DER do grupo (brModelo), transcrições da entrevista de campo de 02/09/2026 (blocos 01 a 06) e material da
   disciplina.
 </footer>

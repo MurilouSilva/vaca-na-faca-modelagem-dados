@@ -88,15 +88,16 @@ Para cada entidade identificada, liste:
 ## 6. Modelagem Conceitual (Entidades, Atributos, Relacionamentos)
 *(vale 7,5% na dimensão conceitual)*
 
-- **Entidades reconhecidas:
+- **Entidades reconhecidas:**
+
 | Entidade | Justificativa |
 |---|---|
-| **Cliente** | Quem realiza os pedidos, precisa ser identificado para histórico e entrega. |
-| **Pedido** | Registro central da operação - cerca de 100 por dia, em quatro canais diferentes. |
-| **Produto** | Itens do cardápio vendidos ao cliente. |
-| **Ingrediente** | Insumos controlados em estoque, com validade e tipo de conservação. |
-| **Fornecedor** | Origem dos insumos, com dias fixos de entrega e prazo de pedido. |
-| **Funcionário** | Equipe de 10 a 14 pessoas, com cargos, praças e escala. |
+| Cliente | Quem realiza os pedidos, precisa ser identificado para histórico e entrega. |
+| Pedido | Registro central da operação - cerca de 100 por dia, em quatro canais diferentes. |
+| Produto | Itens do cardápio vendidos ao cliente. |
+| Ingrediente | Insumos controlados em estoque, com validade e tipo de conservação. |
+| Fornecedor | Origem dos insumos, com dias fixos de entrega e prazo de pedido. |
+| Funcionário | Equipe de 10 a 14 pessoas, com cargos, praças e escala. |
 
 - **Atributos e classificações:**
 Cliente: id_cliente (identificador), nm_cliente, telefone (multivalorado), endereco (composto: bairro, rua, numero), dt_nascimento, dt_cadastro.
@@ -111,7 +112,8 @@ Fornecedor: id_fornecedor (identificador), nm_fornecedor, telefone (multivalorad
 
 Funcionário: id_funcionario (identificador), nm_funcionario, cargo, dt_admissao, perfil_acesso, dias_folga, pracas_aptas (multivalorado).
 
-- **Relacionamentos pertinentes:**
+**Relacionamentos pertinentes:**
+
 | Relacionamento | Cardinalidade | Atributo próprio |
 |---|---|---|
 | Cliente **Realiza** Pedido | (0,n) - (1,1) | - |

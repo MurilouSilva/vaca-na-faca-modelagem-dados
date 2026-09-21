@@ -43,12 +43,12 @@
 ### 3.1 Requisitos Funcionais
 1. Cadastro e consulta de clientes com histórico de pedidos.
 2. Gestão do cardápio (produtos, preços, categorias). 
-3. Definição de receitas (ingredientes e quantidades por produto). 
-4. Registro de pedidos com canal de venda, modo de entrega e forma de pagamento.
-5. Identificação de qual funcionário executou cada etapa do pedido em cada praça.
+3. Definição da ficha técnica de cada produto, indicando quais ingredientes ele utiliza. 
+4. Registro de pedidos com canal de venda, modo de entrega, situação e observação do cliente.
+5. Identificação de quais funcionários prepararam cada pedido.
 6. Controle de estoque com data de validade e estoque mínimo.
 7. Gestão de fornecedores com dias de entrega e prazo de pedido.
-8. Consulta de consumo de insumos por período.
+8. Consulta de quais produtos utilizam cada insumo, para retirar itens do cardápio quando um ingrediente falta.
 
 ### 3.2 Requisitos Não Funcionais
 1. Segurança, apenas administradores podem cancelar pedidos.
@@ -111,17 +111,17 @@ Ingrediente: id_ingrediente (identificador), nm_ingrediente, un_medida, tp_conse
 
 Fornecedor: id_fornecedor (identificador), nm_fornecedor, telefone (multivalorado), dias_entrega (multivalorado), pz_pedido, tp_vinculo.
 
-Funcionário: id_funcionario (identificador), nm_funcionario, cargo, dt_admissao, perfil_acesso, dias_folga, pracas_aptas (multivalorado).
+Funcionário: id_funcionario (identificador), nm_funcionario, cargo, dt_admissao, perfil_acesso, pracas_aptas (multivalorado), dias_folga.
 
 **Relacionamentos pertinentes:**
 
 | Relacionamento | Cardinalidade | Atributo próprio |
 |---|---|---|
-| Cliente **Realiza** Pedido | (0,n) - (1,1) | - |
-| Produto **Contém** Pedido | (0,n) - (1,n) | qt_item |
-| Ingrediente **Utiliza** Produto | (1,n) - (0,n) | qt_utilizada |
+| Cliente **Realiza** Pedido | (0,n) - (1,n) | - |
+| Funcionário **Prepara** Pedido | (0,n) - (1,n) | - |
+| Pedido **Contém** Produto | (1,n) - (1,n) | - |
+| Produto **Utiliza** Ingrediente | (0,n) - (1,n) | - |
 | Fornecedor **Fornece** Ingrediente | (0,n) - (0,n) | - |
-| Funcionário **Armazena** Ingrediente | (0,n) - (1,n) | - |
 
 - **Restrições e políticas organizacionais aplicadas ao modelo.**
 1. qt_estoque_minimo no Ingrediente sustenta a regra de abertura de ordem de compra quando o insumo atinge o mínimo.
@@ -142,7 +142,7 @@ cn_venda no Pedido registra o canal de origem (site próprio, iFood, Keeta, 99Fo
 ## 8. Justificativa Técnica
 *(vale 7,5% — sozinho, é o subcritério de maior peso dentro da Dimensão Conceitual)*
 
-As entidades do modelo(Funcionário, fornecedor, ingrediente, produto, pedido e cliente) representam os objetos centrais da operação e fazem parte do critério de existência independente, todos indentificamos na entrevista. Os relacionamentos seguem a lógica real do negócio. As cardianalidades refletem restrições, por exemplo, um pedido pertence a exatamente um cliente, mas um cliente pode fazer varios pedidos ao longo do tempo.
+As entidades do modelo(Funcionário, fornecedor, ingrediente, produto, pedido e cliente) representam os objetos centrais da operação e fazem parte do critério de existência independente, todos indentificamos na entrevista. Os relacionamentos seguem a lógica real do negócio. As cardianalidades refletem restrições, por exemplo, todo pedido tem pelo menos um cliente e pelo menos um produto, mas um cliente pode estar cadastrado sem nenhum pedido, porque a loja também registra quem chama e não fecha a compra.
 
 ---
 

@@ -172,7 +172,7 @@
 
 <h1>Dicionário de Dados</h1>
 <p class="subtitulo">Vaca na Faca (Vaca&rsquo;s) &mdash; Modelagem de Banco de Dados &middot; Prof. Cid Andrade</p>
-<p class="versao">Entrega 1 &middot; v1.0 &middot; 21 de setembro de 2026</p>
+<p class="versao">Entrega 1 (revisada) &middot; v1.1 &middot; 13 de outubro de 2026</p>
 
 <nav class="sumario">
   <strong>Sumário</strong>
@@ -210,6 +210,8 @@
     à loja mediante ordem de compra.</li>
     <li><strong>FUNCIONARIO</strong> &mdash; pessoa contratada pela loja, habilitada em uma ou mais praças
     da cozinha, que executa a preparação e o atendimento dos pedidos.</li>
+    <li><strong>COMPRA</strong> &mdash; ordem de compra emitida pela loja a um único fornecedor, que reúne
+    os insumos que chegaram ao estoque mínimo e fica em aberto até a mercadoria ser recebida.</li>
   </ul>
 
   <h3>Relacionamentos e cardinalidades</h3>
@@ -220,9 +222,9 @@
     <tbody>
       <tr>
         <td>CLIENTE</td><td>PEDIDO</td><td>Realiza</td>
-        <td>Cliente (0,n) &mdash; Pedido (1,n) &rarr; N:N. Um cliente pode estar cadastrado sem nenhum
-        pedido, porque a loja também registra quem chama e não fecha a compra; todo pedido tem pelo menos
-        um cliente associado.</td>
+        <td>Cliente (0,n) &mdash; Pedido (1,1) &rarr; 1:N. Um cliente pode estar cadastrado sem nenhum
+        pedido, porque a loja também registra quem chama e não fecha a compra; cada pedido pertence a
+        exatamente um cliente.</td>
       </tr>
       <tr>
         <td>FUNCIONARIO</td><td>PEDIDO</td><td>Prepara</td>
@@ -232,25 +234,40 @@
       </tr>
       <tr>
         <td>PEDIDO</td><td>PRODUTO</td><td>Contém</td>
-        <td>Pedido (1,n) &mdash; Produto (1,n) &rarr; N:N. Todo pedido leva pelo menos um item do cardápio;
-        todo item do cardápio figura em pelo menos um pedido.</td>
+        <td>Pedido (1,n) &mdash; Produto (0,n) &rarr; N:N, com os atributos <code>QT_ITEM</code> e
+        <code>VL_UNITARIO</code>. Todo pedido leva pelo menos um item do cardápio; um produto recém-cadastrado
+        pode ainda não ter sido vendido. Para cada item, o relacionamento guarda a quantidade e o preço
+        praticado na venda.</td>
       </tr>
       <tr>
         <td>PRODUTO</td><td>INGREDIENTE</td><td>Utiliza</td>
         <td>Produto (0,n) &mdash; Ingrediente (1,n) &rarr; N:N. É a ficha técnica da loja. O (0,n) do lado
         do produto cobre o item revendido pronto, como a bebida, que não tem ficha técnica; todo insumo
-        mantido em estoque entra em pelo menos um produto.</td>
+        mantido em estoque entra em pelo menos um produto. O atributo <code>QT_UTILIZADA</code> guarda
+        quanto de cada insumo entra em uma unidade do produto.</td>
       </tr>
       <tr>
         <td>FORNECEDOR</td><td>INGREDIENTE</td><td>Fornece</td>
         <td>Fornecedor (0,n) &mdash; Ingrediente (0,n) &rarr; N:N. O mesmo insumo pode ser comprado de mais
         de um fornecedor quando o habitual não entrega no dia necessário.</td>
       </tr>
+      <tr>
+        <td>FORNECEDOR</td><td>COMPRA</td><td>Atende</td>
+        <td>Fornecedor (0,n) &mdash; Compra (1,1) &rarr; 1:N. Um fornecedor recém-cadastrado pode ainda não
+        ter recebido nenhuma ordem; cada ordem de compra é dirigida a um único fornecedor.</td>
+      </tr>
+      <tr>
+        <td>COMPRA</td><td>INGREDIENTE</td><td>Inclui</td>
+        <td>Compra (1,n) &mdash; Ingrediente (0,n) &rarr; N:N, com o atributo <code>QT_COMPRADA</code>. Toda
+        ordem de compra inclui pelo menos um insumo; um insumo recém-cadastrado pode ainda não ter sido
+        comprado.</td>
+      </tr>
     </tbody>
   </table>
 
-  <p style="margin-top:14px">Os cinco relacionamentos são de muitos para muitos e nenhum deles carrega
-  atributo próprio. Conforme a separação entre dicionário e modelo de dados adotada na disciplina, a
+  <p style="margin-top:14px"><em>Realiza</em> e <em>Atende</em> são de um para muitos; os outros cinco
+  relacionamentos são de muitos para muitos. <em>Contém</em>, <em>Utiliza</em> e <em>Inclui</em> carregam
+  atributos próprios, definidos na <a href="#s4">seção 4</a>. Conforme a separação entre dicionário e modelo de dados adotada na disciplina, a
   cardinalidade e a associação entre entidades pertencem ao modelo &mdash; estão registradas nesta seção e
   representadas no DER &mdash; enquanto a <a href="#s4">seção 4</a> se ocupa da definição individual de
   cada campo.</p>
@@ -263,21 +280,26 @@
   <p><strong>Venda.</strong> O cliente entra pelo site próprio, por um marketplace ou pelo balcão &rarr; o
   cadastro é criado ou localizado em <code>CLIENTE</code> &rarr; grava-se um registro em
   <code>PEDIDO</code>, ligado a esse cliente pelo relacionamento <em>Realiza</em> &rarr; cada item escolhido
-  liga o pedido a <code>PRODUTO</code> pelo <em>Contém</em> &rarr; a comanda segue para o balcão e para a
+  liga o pedido a <code>PRODUTO</code> pelo <em>Contém</em>, com a quantidade (<code>QT_ITEM</code>) e o
+  preço praticado (<code>VL_UNITARIO</code>) &rarr; a comanda segue para o balcão e para a
   cozinha, onde chapa, montagem e fritadeira trabalham em paralelo, e cada pessoa que atua sobre a comanda
   é registrada pelo <em>Prepara</em> &rarr; o despacho confere os itens e monta o pacote &rarr; a expedição
   roteiriza e entrega ao motoboy &rarr; <code>TP_STATUS_PEDIDO</code> acompanha essa progressão até
   <em>entregue</em>.</p>
 
   <p><strong>Estoque e compras.</strong> O checklist semanal de contagem é feito no domingo à noite &rarr;
-  a contagem é comparada ao <code>QT_ESTOQUE_MINIMO</code> de cada <code>INGREDIENTE</code> &rarr; os
-  insumos abaixo do mínimo entram na ordem de compra de segunda-feira &rarr; a ordem é dirigida ao
-  <code>FORNECEDOR</code> que atende aquele insumo, pelo relacionamento <em>Fornece</em>, respeitando seu
-  <code>QT_PRAZO_PEDIDO</code> e seus <code>CD_DIA_ENTREGA</code> &rarr; a ficha técnica registrada no
-  <em>Utiliza</em> diz quais produtos dependem de cada insumo, o que permite desligar o
+  a contagem é registrada em <code>QT_ESTOQUE_ATUAL</code> e comparada ao <code>QT_ESTOQUE_MINIMO</code>
+  de cada <code>INGREDIENTE</code> &rarr; os insumos abaixo do mínimo entram nas ordens de compra de
+  segunda-feira: cada uma é uma <code>COMPRA</code> com sua <code>DT_EMISSAO</code>, que lista os insumos
+  pelo <em>Inclui</em>, com a <code>QT_COMPRADA</code> de cada um &rarr; a ordem é dirigida, pelo
+  <em>Atende</em>, a um <code>FORNECEDOR</code> que fornece aquele insumo (relacionamento <em>Fornece</em>),
+  respeitando seu <code>QT_PRAZO_PEDIDO</code> e seus <code>CD_DIA_ENTREGA</code> &rarr; na chegada da
+  mercadoria, registra-se a <code>DT_RECEBIMENTO</code> &rarr; a ficha técnica registrada no
+  <em>Utiliza</em> diz quais produtos dependem de cada insumo e em que quantidade
+  (<code>QT_UTILIZADA</code>), o que permite desligar o
   <code>IN_DISPONIVEL</code> dos lanches afetados quando um ingrediente acaba no meio do expediente.</p>
 
-  <p>Toda leitura ou escrita nessas seis tabelas é registrada pelo log de acesso do SGBD
+  <p>Toda leitura ou escrita nessas sete tabelas é registrada pelo log de acesso do SGBD
   (<a href="#s5">§5</a>), o que sustenta a auditoria e a conformidade com a LGPD
   (<a href="#s6">§6</a>).</p>
 </div>
@@ -344,7 +366,11 @@
         limites de iteração, obrigatoriedade e índices.</li>
   </ul>
 
-  <p><strong>Versão deste dicionário:</strong> v1.0, 21/setembro/2026. Qualquer alteração de estrutura deve
+  <p><strong>Versão deste dicionário:</strong> v1.1, 13/outubro/2026. Revisa a v1.0 (21/setembro/2026) a
+  partir da correção da Entrega 1: <em>Realiza</em> passa a ser de um para muitos; <em>Contém</em> ganha a
+  quantidade e o preço praticado de cada item; <em>Utiliza</em> ganha a quantidade da ficha técnica;
+  <code>INGREDIENTE</code> ganha o estoque atual; e entra a entidade <code>COMPRA</code>, com os
+  relacionamentos <em>Atende</em> e <em>Inclui</em>. Qualquer alteração de estrutura deve
   gerar nova revisão registrada nesta seção; a prática atende, ela própria, ao princípio de rastreabilidade
   exigido pela LGPD (art. 6º, X).</p>
 </div>
@@ -462,8 +488,9 @@
   exatamente um valor de situação, um de modalidade de entrega e um de canal de venda;
   <code>(DS_OBSERVACAO_PEDIDO)</code> fecha a definição como opcional, do mesmo jeito que
   <code>(DS_OBSERVACAO)</code> no estudo de caso de referência. A definição não traz campo de cliente nem
-  de funcionário: no DER, <em>Realiza</em> e <em>Prepara</em> são relacionamentos de muitos para muitos, e
-  a associação entre entidades é objeto do modelo, registrada na <a href="#s1">§1</a>, não do dicionário.</p>
+  de funcionário: a associação entre entidades (<em>Realiza</em>, de um para muitos, e <em>Prepara</em>, de
+  muitos para muitos) é objeto do modelo, registrada na <a href="#s1">§1</a>, e as chaves estrangeiras só
+  aparecem no modelo lógico.</p>
 
   <table>
     <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
@@ -478,7 +505,7 @@
         <td>Instante exato em que o pedido entrou na loja. A hora é parte indispensável do dado, não
         acessória: com cerca de 100 pedidos por dia concentrados nos horários de pico, é o que permite medir
         o tempo entre entrada e entrega e identificar as janelas de &ldquo;correria&rdquo; em que os erros
-        aparecem. Corresponde ao <code>dt_hota_pedido</code> do DER, grafado aqui na forma correta.
+        aparecem. Corresponde ao <code>dt_hora_pedido</code> do DER.
         <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
@@ -594,7 +621,7 @@
   <div class="notacao">
     INGREDIENTE = @ID_INGREDIENTE + NM_INGREDIENTE + CD_UNIDADE_MEDIDA<br>
     &nbsp;&nbsp;+ [TP_REFRIGERADO | TP_CONGELADO | TP_AMBIENTE]<br>
-    &nbsp;&nbsp;+ QT_ESTOQUE_MINIMO + DT_VALIDADE
+    &nbsp;&nbsp;+ QT_ESTOQUE_MINIMO + DT_VALIDADE + QT_ESTOQUE_ATUAL
   </div>
   <p class="leitura"><strong>Leitura:</strong> todos os campos são obrigatórios e estão conectados por
   <code>+</code>; <code>[TP_REFRIGERADO | TP_CONGELADO | TP_AMBIENTE]</code> exige escolher exatamente uma
@@ -640,6 +667,13 @@
         <td>Data de vencimento do insumo em estoque. Sustenta a regra de consumir primeiro o que vence
         antes: a loja já perdeu produto porque a equipe abriu o galão de validade mais longa e deixou o de
         validade mais curta parado no estoque. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_ESTOQUE_ATUAL</td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
+        <td>Quantidade do insumo em estoque na última contagem, na unidade de <code>CD_UNIDADE_MEDIDA</code>.
+        É o número que o checklist de domingo à noite registra; comparado ao <code>QT_ESTOQUE_MINIMO</code>,
+        define o que entra na ordem de compra de segunda-feira. Aceita casas decimais pelo mesmo motivo do
+        estoque mínimo. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
@@ -797,10 +831,93 @@
   </div>
 </div>
 
+<!-- COMPRA -->
+<div class="entidade">
+  <h2>COMPRA</h2>
+  <div class="notacao">
+    COMPRA = @ID_COMPRA + DT_EMISSAO + (DT_RECEBIMENTO)
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>@ID_COMPRA</code> identifica a ordem de compra;
+  <code>(DT_RECEBIMENTO)</code> vem entre parênteses porque fica vazio enquanto a mercadoria não chega. A
+  definição não traz campo de fornecedor nem de insumo: essas associações (<em>Atende</em> e
+  <em>Inclui</em>) são objeto do modelo, registradas na <a href="#s1">§1</a>.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_COMPRA</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
+        <td>Código de localização da ordem de compra; não sofre operação matemática.
+        <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_EMISSAO</td><td class="tipo">date</td><td class="chave">Sim</td>
+        <td>Data em que a ordem de compra foi emitida ao fornecedor; na rotina da loja, a segunda-feira
+        seguinte à contagem de domingo. Somada ao <code>QT_PRAZO_PEDIDO</code> do fornecedor, indica quando a
+        mercadoria deve chegar. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_RECEBIMENTO</td><td class="tipo">date</td><td class="chave">Não</td>
+        <td>Data em que a mercadoria chegou à loja. Fica vazia enquanto a ordem está em aberto, o que
+        permite listar as compras ainda não entregues e cobrar o fornecedor atrasado.
+        <span class="tag-m">[M]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_COMPRA</code> (clusterizado); índice secundário em
+    <code>DT_EMISSAO</code> (compras de um período); índice secundário em <code>DT_RECEBIMENTO</code>
+    (ordens ainda em aberto). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- ATRIBUTOS DE RELACIONAMENTO -->
+<div class="entidade">
+  <h2>ATRIBUTOS DE RELACIONAMENTO</h2>
+  <div class="notacao">
+    CONTEM = QT_ITEM + VL_UNITARIO *por par pedido&ndash;produto*<br>
+    UTILIZA = QT_UTILIZADA *por par produto&ndash;ingrediente*<br>
+    INCLUI = QT_COMPRADA *por par compra&ndash;ingrediente*
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> os três relacionamentos que carregam atributos são definidos
+  aqui só pelos seus campos próprios; quais entidades cada um liga, e com que cardinalidade, está na
+  <a href="#s1">§1</a>, e as chaves que identificam cada par só aparecem no modelo lógico. O comentário entre
+  <code>* *</code> indica a que par de ocorrências o valor se refere.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">QT_ITEM <em>(Contém)</em></td><td class="tipo">integer</td><td class="chave">Sim</td>
+        <td>Quantas unidades daquele produto foram pedidas na mesma comanda. Sem ela, dois lanches iguais no
+        mesmo pedido não se distinguem de um só. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">VL_UNITARIO <em>(Contém)</em></td><td class="tipo">numeric(8,2)</td><td class="chave">Sim</td>
+        <td>Preço de uma unidade do produto no momento da venda, já com a promoção aplicada. Fica no item, e
+        não só no produto, porque o <code>VL_PRECO</code> muda com reajuste e promoção, e o pedido antigo
+        precisa continuar mostrando o valor cobrado. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_UTILIZADA <em>(Utiliza)</em></td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
+        <td>Quantidade do insumo que entra em uma unidade do produto, na unidade de
+        <code>CD_UNIDADE_MEDIDA</code> do ingrediente. É o que torna a ficha técnica mensurável: multiplicada
+        pelas vendas, estima o consumo de cada insumo na semana. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_COMPRADA <em>(Inclui)</em></td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
+        <td>Quantidade do insumo pedida ao fornecedor naquela ordem de compra, na unidade de
+        <code>CD_UNIDADE_MEDIDA</code>. Aceita casas decimais porque insumo a granel é comprado em fração de
+        quilo ou litro. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <!-- ============ 5. LOG DE ACESSO ============ -->
 <div class="bloco" id="s5">
   <h2>5. Log de acesso (metadado operacional)</h2>
-  <p>As seis tabelas ficam sob o mesmo mecanismo de auditoria do SGBD: o plugin <code>audit_log</code> do
+  <p>As sete tabelas ficam sob o mesmo mecanismo de auditoria do SGBD: o plugin <code>audit_log</code> do
   MySQL, configurado para gravar em formato JSON no caminho definido por <code>audit_log_file</code>. Na
   ausência do plugin, a alternativa é o log geral (<code>general_log=ON</code>,
   <code>log_output=TABLE</code>), consultável em <code>mysql.general_log</code>. A retenção e a rotação do
@@ -865,6 +982,13 @@
         <td>Admin master</td>
         <td>Admin master (perfil de acesso); Gerente (praças aptas)</td>
         <td>Admin master (desligamento)</td>
+      </tr>
+      <tr>
+        <td><code>COMPRA</code> <span class="tag-m">[M]</span></td>
+        <td>Gerente, Admin master</td>
+        <td>Gerente, Admin master</td>
+        <td>Gerente, Admin master</td>
+        <td>Admin master</td>
       </tr>
     </tbody>
   </table>

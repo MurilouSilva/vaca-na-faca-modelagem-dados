@@ -142,8 +142,66 @@ cn_venda no Pedido registra o canal de origem (site próprio, iFood, Keeta, 99Fo
 ## 8. Justificativa Técnica
 *(vale 7,5% — sozinho, é o subcritério de maior peso dentro da Dimensão Conceitual)*
 
-As entidades do modelo(Funcionário, fornecedor, ingrediente, produto, pedido e cliente) representam os objetos centrais da operação e fazem parte do critério de existência independente, todos indentificamos na entrevista. Os relacionamentos seguem a lógica real do negócio. As cardianalidades refletem restrições, por exemplo, todo pedido tem pelo menos um cliente e pelo menos um produto, mas um cliente pode estar cadastrado sem nenhum pedido, porque a loja também registra quem chama e não fecha a compra.
+As entidades do modelo(Funcionário, fornecedor, ingrediente, produto, pedido e cliente) representam os objetos centrais da operação e fazem parte do critério de existência independente, todos identificamos na entrevista. Os relacionamentos seguem a lógica real do negócio: 
 
+Tópico 1: Cardinalidade e Mapeamento mais detalhado.
+
+​1. Cliente(0,n) - (1,1)Pedido (Relacionamento Realiza);
+
+​Decisão Adotada: Cardinalidade (0,n) em Cliente e (1,1) em Pedido;
+
+​Observação: Permite o registro de leads(interesse do cliente para com um determinado produto) e prospecções(atendimento a potenciais clientes que entram em contacto sem concluir o pedido). Por outro lado, a participação total (1,1) do Pedido impede vendas "órfãs", garantindo que todo o registro financeiro/fiscal esteja atrelado a um titular específico;
+
+​Alternativa Descartada: Exigir (1,n) em Cliente (obrigatoriedade de compra no cadastro) eliminaria a funcionalidade de CRM e base de dados para captação de novos clientes.
+
+​2. Pedido(1,n) - (1,1)Produto (Relacionamento Contém);
+
+​Decisão Adotada: Cardinalidade (1,n) em Pedido e (1,1) na perspetiva da instância/item do produto associado;
+
+​Observação: Garante a restrição operacional de que nenhum pedido possa ser gerado vazio ou sem itens. A nível do item comercializado, vincula-se com precisão a uma entrada única do catálogo para o correto abate do valor unitário e de stock;
+
+​Atributos de Ligação: Foram alocados diretamente na associação/item os atributos (qt_item) e (vl_unitario) para preservar o histórico do preço praticado no momento exato da venda.
+
+​3. Pedido(1,n) - (1,1)Conta_Receber (Relacionamento Gera); 
+
+​Decisão Adotada: Cardinalidade (1,n) em Pedido e (1,1) em Conta_Receber;
+
+​Observação: Permite a consolidação financeira de múltiplos pedidos em um único título de cobrança (ex.: faturamento quinzenal/mensal para clientes corporativos ou comandas abertas). Adicionalmente, garante que cada pedido pertença obrigatoriamente a uma cobrança rastreável;
+  
+​Alternativa Descartada: Um relacionamento 1:1 estrito impediria o faturamento agrupado por lote de pedidos do mesmo cliente.
+
+​4. Funcionário(1,n) - (1,n)Pedido (Relacionamento Prepara);
+
+​Decisão Adotada: Cardinalidade N:N (1,n para 1,n);
+  
+​Justificativa Técnica: Um pedido pode envolver múltiplos colaboradores em diferentes etapas (atendimento, montagem, embalagem). Do mesmo modo, um funcionário atende a múltiplos pedidos ao longo do seu turno. Isso assegura métricas de produtividade e auditoria de qualidade na produção;
+
+​5. Produto(1,1) - (1,n)Ingrediente (Relacionamento Utiliza);
+
+​Decisão Adotada: Ficha técnica automatizada. Um produto utiliza 1 ou mais ingredientes, e o ingrediente pode estar presente em vários produtos;
+ 
+​Atributo de Ligação: Contém a (qt_utilizada), essencial para calcular o Custo de Mercadoria Vendida (CMV) e efetuar o abate automático dos insumos do stock no ato da venda. 
+
+Tópico 2: Decisão de Entidades.
+
+Decisão Adotada: (Entidade Transacional Compra):
+​Fornecedor (0,n) <Atende> (1,1) Compra  
+​Compra (1,n) <Inclui> (0,n) Ingrediente (com o atributo qt_comprada).
+  
+​Por que importa: Permite registrar o histórico de entradas e aquisições ao longo do tempo (armazenando dt_emissao e dt_recebimento). Sem a entidade Compra, seria impossível saber quando, quanto e por qual valor determinado insumo foi realocado no lote de stock.
+ 
+​O Papel do Relacionamento Fornece (N:N Direto):
+​A relação direta Fornecedor (0,n) <Fornece> (0,n) Ingrediente foi mantida no modelo como uma tabela de homologação/catálogo. Ela detalha especificamente quais matérias-primas cada fornecedor está apto a vender, servindo para a cotação prévia de preços e substituição rápida de parceiros em caso de ruptura de stock.
+
+Tópico 3: Atributos multivalorados e Derivações
+
+- ​dias_entrega (em Fornecedor): Representado como (0,n), pois um fornecedor pode efetuar entregas em múltiplos dias da semana.  
+​pracas_aptas (em Funcionário): Representado como (1,n), indicando que um colaborador pode operar em uma ou mais estações de trabalho/praças de cozinha.  
+- ​telefone (em Fornecedor e Cliente): Indicado com (0,n), suportando múltiplos contactos telefônicos por registro.  
+​Justificativa de Design: No modelo lógico/relacional, estas propriedades serão desmembradas em tabelas auxiliares/de junção, prevenindo a violação de atributos atômicos (primeira forma normal).
+
+​Endereço Estruturado (Cliente):
+​O atributo endereco desdobra-se em bairro, rua e numero, viabilizando rotas de entrega regionalizadas e consultas analíticas por zona geográfica.
 ---
 
 ## 9. Uso de Inteligência Artificial

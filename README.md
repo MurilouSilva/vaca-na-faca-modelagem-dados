@@ -61,14 +61,14 @@
 *(esta seção DIVIDE com a Seção 3 "Requisitos do Sistema" os mesmos 7,5% da dimensão conceitual — juntas valem 7,5%, não 7,5% cada — + 4% exclusivos desta seção na documentação. "Regras de negócio" é o termo técnico usado em modelagem de dados para as regras de funcionamento de qualquer organização, com ou sem fins lucrativos)*
 
 - **Regras operacionais:** 
-1. Quando um insume atinge o estoque mínimo, uma ordem de compra deve ser aberta.
-2. Deve-se usar o insumo de validade mais curta.
-3. Os ingredientes dos lanches sao padronizados e devem ser montades de acordo com a ficha técnica.
-4. Cada fornecedor tem dias fixos de entrega e prazo de pedido.
+1. Estoque mínimo gera ordem de compra. Evita ruptura (produto indisponível e cancelamentos) e excesso de compra. O sistema precisa de estoque mínimo por insumo e gatilho automático.
+2. Usar primeiro o insumo de validade mais curta (PVPS). Reduz desperdício e risco sanitário. O estoque deve registrar lote e validade.
+3. Lanches montados conforme a ficha técnica. Garante padrão de qualidade, controle de custo e baixa automática de insumos a cada venda.
+4. Fornecedores têm dias fixos de entrega e prazo de pedido. Define quando comprar para não faltar insumo. O cadastro guarda dia de entrega, prazo e lead time.
 - **Restrições organizacionais:** 
-1. Espaço físico limitado - congelados tem limite maximo de duas semanas.
-2. Dependencia de plataformas externas como 99 Food, Ifood e Keeta.
-3. LGPD, dados do cliente precisam de tratamento especial.
+1. Espaço físico limitado (congelados: máximo de 2 semanas). Limita o volume de compra e reforça o controle de validade. O sistema precisa de estoque máximo por categoria e alertas.
+2. Dependência de 99 Food, iFood e Keeta. A loja não controla taxas, comissões e regras das plataformas, o que afeta a margem. O sistema deve centralizar os pedidos e considerar a comissão no cálculo.
+3. LGPD. Dados do cliente são protegidos por lei (Lei 13.709/2018). O sistema precisa de controle de acesso, armazenamento seguro e exclusão sob solicitação.
 ---
 
 ## 5. Dicionário de Dados Conceitual (Preliminar)

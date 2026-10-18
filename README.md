@@ -9,7 +9,7 @@
   Murilo Silva de Jesus - 47940921
   Vinicius Ferreira Shinohara - 48101290
   Ítalo Augusto Gomes Azarias - 48262668
-  Matheus Camargo Xavier da Costa - 47996544
+  Matheus Camargos Xavier da Costa - 47996544
   Marcos Vinicius Oliveira de Almeida - 47866381
 
 ## 1. Caracterização da Organização

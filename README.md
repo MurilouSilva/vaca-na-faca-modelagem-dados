@@ -29,13 +29,95 @@
 
 ---
 
-## 2. Processos de Negócio
-*(vale 10% — Dimensão Procedimental)*
+2. Processos de Negócio
+A hamburgueria Vaca na Faca executa atividades interligadas de atendimento, vendas, produção, controle de estoque, compras e organização da equipe. A descrição a seguir explicita entradas, responsáveis, etapas, saídas e integrações desses processos, considerando as informações levantadas na pesquisa sobre o estabelecimento. Quando uma etapa representa uma melhoria proposta para o sistema — e não uma rotina confirmada pela entrevista — isso é indicado no texto.
+2.1 Atendimento e cadastro de clientes
+Objetivo: identificar o cliente associado ao pedido e manter informações necessárias ao atendimento.
+- Entrada: contato ou solicitação de compra de um cliente, pelos canais utilizados pela hamburgueria.
+- Responsáveis: equipe de atendimento e sistemas dos canais de venda.
+- Etapas: (1) receber a solicitação; (2) consultar se o cliente já possui cadastro; (3) quando necessário, registrar ou atualizar nome, contato e dados de entrega; (4) associar o cadastro ao pedido correspondente.
+- Saída: informações do cliente disponíveis para consulta e para o registro da venda.
+- Integração: fornece os dados utilizados no registro do pedido (2.2). O cliente pode estar cadastrado antes de realizar a primeira compra.
+2.2 Registro e confirmação de pedidos (vendas)
+Objetivo: transformar a escolha do cliente em um pedido identificável e encaminhá-lo à produção.
+- Entrada: itens escolhidos, quantidades, canal de origem, informações do cliente e modalidade de retirada ou entrega.
+- Responsáveis: equipe de atendimento e/ou plataforma de venda.
+- Etapas: (1) receber o pedido, inclusive dos canais próprios e marketplaces; (2) identificar o cliente e os produtos solicitados; (3) registrar quantidades e valores praticados na venda; (4) verificar a disponibilidade dos itens; (5) confirmar o pedido ou informar a indisponibilidade e oferecer uma alternativa; (6) encaminhar a comanda à produção.
+- Saída: pedido com identificador, itens, quantidades, preço e status, pronto para preparação.
+- Integração: utiliza dados do cadastro de clientes (2.1) e do cardápio; depende da disponibilidade acompanhada pelo estoque (2.4); aciona a produção (2.3). O registro do pagamento e de repasses por marketplace, quando aplicável, permite a conferência financeira. A forma exata de conciliação precisa ser validada com a empresa.
+2.3 Preparação, conferência e despacho dos pedidos
+Objetivo: produzir os itens solicitados e encaminhar corretamente o pedido para retirada ou entrega.
+- Entrada: comanda confirmada, produtos pedidos e respectivas fichas técnicas.
+- Responsáveis: funcionários das praças de produção e equipe de expedição.
+- Etapas: (1) receber a comanda; (2) distribuir as tarefas entre as praças necessárias, como chapa, fritadeira e montagem; (3) preparar os produtos conforme os itens solicitados; (4) conferir quantidades e composição; (5) embalar e encaminhar para retirada ou entrega; (6) atualizar o status do pedido.
+- Saída: pedido concluído e encaminhado ao cliente, com status atualizado.
+- Integração: recebe as informações de vendas (2.2), utiliza ingredientes controlados pelo estoque (2.4) e pode associar os funcionários participantes por meio da organização da equipe (2.6). O vínculo entre funcionário e pedido é especialmente relevante para investigar falhas e melhorar os processos. O registro individual dessa participação é uma melhoria proposta para o sistema.
+2.4 Controle de estoque e disponibilidade de insumos
+Objetivo: acompanhar os ingredientes disponíveis e evitar falta de materiais necessários à produção.
+- Entrada: relação de ingredientes, quantidades existentes, consumo nas preparações e contagem física do estoque.
+- Responsáveis: equipe ou responsável pelo estoque.
+- Etapas: (1) realizar a conferência física dos itens — o levantamento identificou um checklist manual aos domingos; (2) registrar ou atualizar as quantidades disponíveis; (3) comparar as quantidades com os níveis mínimos definidos; (4) identificar insumos próximos da necessidade de reposição; (5) sinalizar a necessidade de compra; (6) atualizar a disponibilidade dos produtos afetados pela falta de ingredientes.
+- Saída: posição atual do estoque, alertas de reposição e informações sobre disponibilidade de produtos.
+- Integração: apoia a confirmação dos pedidos (2.2) e a produção (2.3); quando há necessidade de reposição, fornece informações ao processo de compras (2.5). A atualização automática do estoque a partir de cada receita é uma funcionalidade proposta, dependente de fichas técnicas confiáveis.
+2.5 Compras e recebimento de mercadorias
+Objetivo: repor ingredientes e registrar a entrada de materiais adquiridos dos fornecedores.
+- Entrada: necessidades de reposição apontadas pelo estoque, ingredientes e quantidades desejadas, dados dos fornecedores e condições de fornecimento.
+- Responsáveis: responsável pelas compras e funcionário encarregado do recebimento.
+- Etapas: (1) consultar os insumos que precisam ser repostos; (2) verificar fornecedores aptos, disponibilidade, dias de entrega e antecedência exigida; (3) definir as quantidades considerando o consumo e a capacidade de armazenamento; (4) emitir a solicitação ou ordem de compra; (5) receber e conferir os produtos entregues; (6) registrar as quantidades recebidas e atualizar o estoque; (7) comunicar eventuais divergências.
+- Saída: ordem de compra registrada e estoque atualizado após o recebimento.
+- Integração: parte dos apontamentos do controle de estoque (2.4) e retorna a ele com os insumos recebidos, permitindo a continuidade das vendas (2.2) e da produção (2.3). A conferência detalhada de lotes e divergências é uma prática proposta para validação com o estabelecimento.
+2.6 Organização da equipe e acompanhamento das atividades
+Objetivo: organizar as responsabilidades dos colaboradores e melhorar a identificação de participantes no atendimento e na produção.
+- Entrada: cadastro de funcionários, cargos, praças de atuação, escalas e registros de participação nas atividades.
+- Responsáveis: gestão do estabelecimento e líderes operacionais.
+- Etapas: (1) manter os dados básicos dos colaboradores; (2) identificar funções e praças nas quais cada pessoa atua; (3) organizar a distribuição de tarefas conforme a escala; (4) associar os funcionários aos pedidos em que atuaram, quando esse registro estiver disponível; (5) consultar o histórico para analisar ocorrências e necessidades de treinamento.
+- Saída: equipe organizada e possibilidade de rastrear a participação dos colaboradores nas atividades.
+- Integração: dá suporte à produção e expedição (2.3) e ao atendimento (2.1–2.2). O histórico individual de participação e o acompanhamento de desempenho são melhorias propostas para resolver a dificuldade relatada de identificar responsáveis por erros.
+2.7 Fluxograma de vendas, produção e entrega
+```mermaid
+flowchart TD
+    A([Solicitação do cliente]) --> B[Consultar ou cadastrar cliente]
+    B --> C[Registrar itens, valores e canal do pedido]
+    C --> D{Itens disponíveis?}
+    D -- Não --> E[Informar indisponibilidade e oferecer alternativa]
+    E --> F{Cliente confirma alteração?}
+    F -- Sim --> C
+    F -- Não --> G([Encerrar sem confirmar o pedido])
+    D -- Sim --> H[Confirmar pedido e enviar comanda]
+    H --> I[Preparar nas praças necessárias]
+    I --> J[Conferir itens e embalagem]
+    J --> K{Retirada ou entrega?}
+    K -- Retirada --> L[Disponibilizar pedido para retirada]
+    K -- Entrega --> M[Encaminhar à expedição]
+    L --> N[Atualizar status do pedido]
+    M --> N
+    N --> O([Pedido finalizado])
+```
+Interpretação: o fluxo começa no atendimento, utiliza dados do cliente e da disponibilidade do estoque, passa pela produção e termina com retirada ou entrega. A confirmação do pedido cria os registros necessários para acompanhamento e eventual conferência financeira.
+2.8 Fluxograma de estoque, compras e recebimento
+```mermaid
+flowchart TD
+    A([Conferência do estoque]) --> B[Registrar quantidades de ingredientes]
+    B --> C{Estoque exige reposição?}
+    C -- Não --> D[Manter acompanhamento]
+    D --> E([Continuar operação])
+    C -- Sim --> F[Identificar ingredientes e quantidades necessárias]
+    F --> G[Consultar fornecedores, prazos e dias de entrega]
+    G --> H[Preparar e emitir ordem de compra]
+    H --> I[Receber mercadorias]
+    I --> J{Quantidades e condições conferem?}
+    J -- Não --> K[Registrar divergência e tratar com fornecedor]
+    K --> L[Atualizar somente o que foi efetivamente recebido]
+    J -- Sim --> L
+    L --> M[Atualizar posição de estoque]
+    M --> N([Insumos disponíveis para a produção])
+```
+Interpretação: a necessidade de compra é identificada pelo controle de estoque. A aquisição é direcionada aos fornecedores cadastrados, e o recebimento alimenta novamente o estoque, que sustenta a preparação dos pedidos.
+2.9 Integração geral dos processos
+Os seis processos compõem um ciclo de informações: atendimento e cadastro → registro da venda → produção e despacho. Ao mesmo tempo, produção → consumo de ingredientes → controle do estoque → compras e recebimento → reposição do estoque. A organização da equipe dá suporte ao atendimento e à produção e ajuda a identificar quem participou de cada etapa.
 
-- **Principais processos mapeados:** Cadastro de clientes, Gestão de cardápio e receitas, controle de estoque de ingredientes, gestão de fornecedores e compras, processamento de pedidos, organização da equipe.
-- **Fluxogramas:** (Opcional) *represente visualmente pelo menos os processos-chave (imagens anexadas). Deve ficar claro o fluxo de cada processo e como eles se integram entre si.*
-
----
+Dessa forma, os processos não são atividades isoladas: o pedido depende do cliente e dos produtos disponíveis; a produção depende do estoque e dos funcionários; e a reposição depende da identificação das necessidades e do relacionamento com fornecedores. Essa integração orienta os dados necessários para a modelagem conceitual apresentada nas demais seções do projeto, sem exigir modificações nelas.
+Nota de validação: o checklist manual aos domingos e a dificuldade de rastrear a responsabilidade por pedidos foram relatados no levantamento. Outras etapas descritas aqui representam fluxos operacionais típicos e/ou propostas de melhoria; o grupo deve confirmar os detalhes com a hamburgueria antes de apresentá-los como rotinas já existentes.
 
 ## 3. Requisitos do Sistema
 *(esta seção e a Seção 4 "Regras de Negócio" DIVIDEM 7,5% na dimensão conceitual — juntas valem 7,5%, não 7,5% cada — + 4% exclusivos desta seção na organização/documentação)*

@@ -29,7 +29,7 @@
 
 ---
 
-2. Processos de Negócio
+## 2. Processos de Negócio
 A hamburgueria Vaca na Faca executa atividades interligadas de atendimento, vendas, produção, controle de estoque, compras e organização da equipe. A descrição a seguir explicita entradas, responsáveis, etapas, saídas e integrações desses processos, considerando as informações levantadas na pesquisa sobre o estabelecimento. Quando uma etapa representa uma melhoria proposta para o sistema — e não uma rotina confirmada pela entrevista — isso é indicado no texto.
 2.1 Atendimento e cadastro de clientes
 Objetivo: identificar o cliente associado ao pedido e manter informações necessárias ao atendimento.

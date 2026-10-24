@@ -218,7 +218,7 @@ cn_venda no Pedido registra o canal de origem (site próprio, iFood, Keeta, 99Fo
 ## 7. Diagrama Entidade-Relacionamento (DER)
 *(vale 20% — é o item de maior peso da entrega)*
 
-![DER](DER.jpeg)
+![DER](DER.png)
 ---
 
 ## 8. Justificativa Técnica

@@ -166,13 +166,15 @@
   }
   nav.sumario a { color: var(--roxo); text-decoration: none; }
   nav.sumario a:hover { text-decoration: underline; }
+  td.restr { font-size: 13px; }
+  .grupo { max-width: 950px; margin: 10px auto 24px auto; color: var(--roxo-claro); font-size: 15px; font-weight: 600; letter-spacing: .3px; }
 </style>
 </head>
 <body>
 
 <h1>Dicionário de Dados</h1>
 <p class="subtitulo">Vaca na Faca (Vaca&rsquo;s) &mdash; Modelagem de Banco de Dados &middot; Prof. Cid Andrade</p>
-<p class="versao">Entrega 1 (revisada) &middot; v1.1 &middot; 13 de outubro de 2026</p>
+<p class="versao">Entrega 2 &middot; v1.2 &middot; 2 de novembro de 2026</p>
 
 <nav class="sumario">
   <strong>Sumário</strong>
@@ -180,7 +182,7 @@
     <li><a href="#s1">1. Modelo conceitual</a></li>
     <li><a href="#s2">2. Fluxo de dados (visão de DFD)</a></li>
     <li><a href="#s3">3. Convenções do dicionário</a></li>
-    <li><a href="#s4">4. Dicionário de dados por entidade</a></li>
+    <li><a href="#s4">4. Dicionário de dados por tabela</a> (22 tabelas)</li>
     <li><a href="#s5">5. Log de acesso (metadado operacional)</a></li>
     <li><a href="#s6">6. Acesso por operação e conformidade com a LGPD</a></li>
   </ul>
@@ -190,31 +192,37 @@
 <div class="bloco" id="s1">
   <h2>1. Modelo conceitual</h2>
 
-  <p>Este modelo representa a operação da <strong>Vaca na Faca</strong>, hamburgueria em funcionamento
-  desde 2019, com equipe de 10 a 14 pessoas e média de 100 pedidos por dia. O cliente faz o pedido pelo
-  site próprio da loja, por um marketplace ou presencialmente; o pedido é montado na cozinha a partir da
-  ficha técnica de cada produto, consumindo ingredientes que a loja compra de fornecedores e mantém em
-  estoque sob controle de estoque mínimo.</p>
+  <p>Este modelo representa a operação da <strong>Vaca na Faca</strong>, hamburgueria em funcionamento desde
+  2019, com equipe de 10 a 14 pessoas e média de 100 pedidos por dia. O cliente faz o pedido pelo site próprio
+  da loja, por um marketplace ou presencialmente; o pedido passa pelas praças da cozinha, que montam cada lanche
+  pela ficha técnica, e é faturado na entrega. A loja compra os insumos de fornecedores, controla o estoque pelo
+  estoque mínimo, paga e recebe títulos, e acompanha a equipe: quem fez cada etapa do pedido, o treino em cada
+  praça e as tarefas do quadro de missões. O DER tem <strong>15 entidades e 15 relacionamentos</strong>, que viram
+  <strong>22 tabelas</strong> no modelo lógico.</p>
 
   <h3>Entidades</h3>
   <ul class="limpa">
-    <li><strong>CLIENTE</strong> &mdash; pessoa física cadastrada na base da loja que solicita itens do
-    cardápio para consumo próprio, em vez de para revenda.</li>
-    <li><strong>PEDIDO</strong> &mdash; registro de venda aberto em um instante determinado, que reúne os
-    itens solicitados de uma só vez e segue como unidade única até a entrega ou a retirada.</li>
-    <li><strong>PRODUTO</strong> &mdash; item do cardápio com preço de venda próprio, oferecido ao cliente
-    como unidade de compra, seja ele preparado na cozinha ou revendido pronto.</li>
-    <li><strong>INGREDIENTE</strong> &mdash; insumo comprado de fornecedor e mantido em estoque, que entra
-    na preparação dos produtos e não é vendido isoladamente ao cliente.</li>
-    <li><strong>FORNECEDOR</strong> &mdash; empresa com prazo e dias de entrega próprios que vende insumos
-    à loja mediante ordem de compra.</li>
-    <li><strong>FUNCIONARIO</strong> &mdash; pessoa contratada pela loja, habilitada em uma ou mais praças
-    da cozinha, que executa a preparação e o atendimento dos pedidos.</li>
-    <li><strong>COMPRA</strong> &mdash; ordem de compra emitida pela loja a um único fornecedor, que reúne
-    os insumos que chegaram ao estoque mínimo e fica em aberto até a mercadoria ser recebida.</li>
+    <li><strong>CLIENTE</strong> &mdash; pessoa física cadastrada na base da loja que pede itens do cardápio para consumo próprio.</li>
+    <li><strong>PEDIDO</strong> &mdash; registro de venda aberto num instante determinado, que reúne os itens pedidos de uma vez e segue como uma unidade até a entrega ou a retirada.</li>
+    <li><strong>PRODUTO</strong> &mdash; item do cardápio com preço de venda próprio, preparado na cozinha ou revendido pronto.</li>
+    <li><strong>INGREDIENTE</strong> &mdash; insumo comprado de fornecedor e mantido em estoque, que entra na preparação dos produtos.</li>
+    <li><strong>FORNECEDOR</strong> &mdash; empresa com prazo e dias de entrega próprios que vende insumos à loja por ordem de compra.</li>
+    <li><strong>COMPRA</strong> &mdash; ordem de compra emitida a um único fornecedor, que fica em aberto até a mercadoria chegar.</li>
+    <li><strong>FUNCIONARIO</strong> &mdash; pessoa contratada pela loja, que trabalha na cozinha, no balcão, no despacho, na expedição ou na entrega.</li>
+    <li><strong>PRACA</strong> &mdash; posto de trabalho da cozinha por onde a comanda passa: chapa, montagem, fritadeira ou despacho.</li>
+    <li><strong>ETAPA_PEDIDO</strong> &mdash; o trabalho de uma praça sobre um pedido, feito por uma pessoa, que pode sair certo ou com erro.</li>
+    <li><strong>TAREFA</strong> &mdash; missão do quadro de missões do dia, como abrir a loja ou contar o estoque.</li>
+    <li><strong>EXECUCAO_TAREFA</strong> &mdash; uma vez em que uma pessoa pegou uma tarefa do quadro, com a hora de início e, se concluiu, a de conclusão.</li>
+    <li><strong>NF_SAIDA</strong> &mdash; nota fiscal emitida pela loja para um pedido entregue.</li>
+    <li><strong>NF_ENTRADA</strong> &mdash; nota fiscal do fornecedor que acompanha a mercadoria de uma compra.</li>
+    <li><strong>CONTA_PAGAR</strong> &mdash; título que a loja deve pagar: boleto de insumo ou custo fixo.</li>
+    <li><strong>CONTA_RECEBER</strong> &mdash; título que a loja tem a receber por uma venda faturada: repasse do marketplace, Pix ou maquininha.</li>
   </ul>
 
   <h3>Relacionamentos e cardinalidades</h3>
+  <p><strong>Como ler:</strong> segue o exemplo do professor e o brModelo. O par <code>(mín, máx)</code> ao lado
+  de uma entidade diz quantas ocorrências dela se ligam a <em>uma</em> ocorrência da entidade do outro lado. Em
+  <em>Realiza</em>, o (1,1) ao lado de Cliente diz que cada pedido tem exatamente um cliente.</p>
   <table>
     <thead>
       <tr><th>Entidade</th><th>Relaciona-se com</th><th>Relacionamento</th><th>Cardinalidade</th></tr>
@@ -222,99 +230,113 @@
     <tbody>
       <tr>
         <td>CLIENTE</td><td>PEDIDO</td><td>Realiza</td>
-        <td>Cliente (0,n) &mdash; Pedido (1,1) &rarr; 1:N. Um cliente pode estar cadastrado sem nenhum
-        pedido, porque a loja também registra quem chama e não fecha a compra; cada pedido pertence a
-        exatamente um cliente.</td>
-      </tr>
-      <tr>
-        <td>FUNCIONARIO</td><td>PEDIDO</td><td>Prepara</td>
-        <td>Funcionário (0,n) &mdash; Pedido (1,n) &rarr; N:N. Um funcionário recém-admitido pode ainda não
-        ter preparado pedido algum; todo pedido passa por pelo menos um funcionário, e em geral por vários,
-        porque chapa, montagem, fritadeira e despacho atuam sobre a mesma comanda.</td>
+        <td>Cliente (1,1) · Pedido (0,n) &rarr; 1:N. Cada pedido é de exatamente um cliente. O cadastro vem antes do pedido, e o cliente fica sem pedido quando a venda não é confirmada.</td>
       </tr>
       <tr>
         <td>PEDIDO</td><td>PRODUTO</td><td>Contém</td>
-        <td>Pedido (1,n) &mdash; Produto (0,n) &rarr; N:N, com os atributos <code>QT_ITEM</code> e
-        <code>VL_UNITARIO</code>. Todo pedido leva pelo menos um item do cardápio; um produto recém-cadastrado
-        pode ainda não ter sido vendido. Para cada item, o relacionamento guarda a quantidade e o preço
-        praticado na venda.</td>
+        <td>Produto (1,n) · Pedido (0,n) &rarr; N:N, com <code>QT_ITEM</code> e <code>VL_UNITARIO</code>. Todo pedido tem pelo menos um produto; um produto novo ainda não foi vendido. Na Entrega 1, os dois lados eram (1,n), o que obrigava todo produto a já ter sido vendido; o (1,n) ao lado de Pedido virou (0,n).</td>
       </tr>
       <tr>
         <td>PRODUTO</td><td>INGREDIENTE</td><td>Utiliza</td>
-        <td>Produto (0,n) &mdash; Ingrediente (1,n) &rarr; N:N. É a ficha técnica da loja. O (0,n) do lado
-        do produto cobre o item revendido pronto, como a bebida, que não tem ficha técnica; todo insumo
-        mantido em estoque entra em pelo menos um produto. O atributo <code>QT_UTILIZADA</code> guarda
-        quanto de cada insumo entra em uma unidade do produto.</td>
-      </tr>
-      <tr>
-        <td>FORNECEDOR</td><td>INGREDIENTE</td><td>Fornece</td>
-        <td>Fornecedor (0,n) &mdash; Ingrediente (0,n) &rarr; N:N. O mesmo insumo pode ser comprado de mais
-        de um fornecedor quando o habitual não entrega no dia necessário.</td>
+        <td>Produto (1,n) · Ingrediente (0,n) &rarr; N:N, com <code>QT_UTILIZADA</code>. É a ficha técnica: todo insumo entra em pelo menos um produto, e o mínimo 0 do lado do Ingrediente permite produto sem ficha, como a bebida revendida pronta.</td>
       </tr>
       <tr>
         <td>FORNECEDOR</td><td>COMPRA</td><td>Atende</td>
-        <td>Fornecedor (0,n) &mdash; Compra (1,1) &rarr; 1:N. Um fornecedor recém-cadastrado pode ainda não
-        ter recebido nenhuma ordem; cada ordem de compra é dirigida a um único fornecedor.</td>
+        <td>Fornecedor (1,1) · Compra (0,n) &rarr; 1:N. Cada ordem vai para um fornecedor; um fornecedor novo ainda não recebeu ordem.</td>
       </tr>
       <tr>
         <td>COMPRA</td><td>INGREDIENTE</td><td>Inclui</td>
-        <td>Compra (1,n) &mdash; Ingrediente (0,n) &rarr; N:N, com o atributo <code>QT_COMPRADA</code>. Toda
-        ordem de compra inclui pelo menos um insumo; um insumo recém-cadastrado pode ainda não ter sido
-        comprado.</td>
+        <td>Ingrediente (1,n) · Compra (0,n) &rarr; N:N, com <code>QT_COMPRADA</code>. Toda ordem tem pelo menos um insumo; um insumo novo ainda não foi comprado.</td>
+      </tr>
+      <tr>
+        <td>PEDIDO</td><td>NF_SAIDA</td><td>Emite</td>
+        <td>Pedido (1,1) · NF_Saída (0,1) &rarr; 1:1. Uma nota por pedido; o pedido cancelado não é faturado.</td>
+      </tr>
+      <tr>
+        <td>COMPRA</td><td>NF_ENTRADA</td><td>Recebe</td>
+        <td>Compra (1,1) · NF_Entrada (0,1) &rarr; 1:1. A compra fica sem nota até a mercadoria chegar.</td>
+      </tr>
+      <tr>
+        <td>NF_ENTRADA</td><td>CONTA_PAGAR</td><td>Gera_Pagar</td>
+        <td>NF_Entrada (0,1) · Conta_Pagar (1,n) &rarr; 1:N. O custo fixo não tem nota; uma nota pode virar um ou mais boletos.</td>
+      </tr>
+      <tr>
+        <td>NF_SAIDA</td><td>CONTA_RECEBER</td><td>Gera_Receber</td>
+        <td>NF_Saída (1,1) · Conta_Receber (1,n) &rarr; 1:N. Toda venda faturada gera recebimento.</td>
+      </tr>
+      <tr>
+        <td>PEDIDO</td><td>ETAPA_PEDIDO</td><td>Passa_por</td>
+        <td>Pedido (1,1) · Etapa_Pedido (0,n) &rarr; 1:N. Cada etapa é de um pedido; o pedido recém-recebido ainda não passou por nenhuma praça.</td>
+      </tr>
+      <tr>
+        <td>FUNCIONARIO</td><td>ETAPA_PEDIDO</td><td>Executa</td>
+        <td>Funcionário (1,1) · Etapa_Pedido (0,n) &rarr; 1:N. Cada etapa tem um responsável.</td>
+      </tr>
+      <tr>
+        <td>PRACA</td><td>ETAPA_PEDIDO</td><td>Ocorre_em</td>
+        <td>Praça (1,1) · Etapa_Pedido (0,n) &rarr; 1:N. Cada etapa acontece numa praça.</td>
+      </tr>
+      <tr>
+        <td>FUNCIONARIO</td><td>PRACA</td><td>Treina</td>
+        <td>Funcionário (1,n) · Praça (0,n) &rarr; N:N, com <code>DT_INICIO_TREINO</code> e <code>DT_HABILITACAO</code>. Toda praça tem pelo menos uma pessoa; quem não é da cozinha não treina em praça.</td>
+      </tr>
+      <tr>
+        <td>FUNCIONARIO</td><td>EXECUCAO_TAREFA</td><td>Cumpre</td>
+        <td>Funcionário (1,1) · Execução_Tarefa (0,n) &rarr; 1:N. Cada execução é de uma pessoa.</td>
+      </tr>
+      <tr>
+        <td>TAREFA</td><td>EXECUCAO_TAREFA</td><td>Refere</td>
+        <td>Tarefa (1,1) · Execução_Tarefa (0,n) &rarr; 1:N. Cada execução é de uma tarefa do quadro.</td>
       </tr>
     </tbody>
   </table>
 
-  <p style="margin-top:14px"><em>Realiza</em> e <em>Atende</em> são de um para muitos; os outros cinco
-  relacionamentos são de muitos para muitos. <em>Contém</em>, <em>Utiliza</em> e <em>Inclui</em> carregam
-  atributos próprios, definidos na <a href="#s4">seção 4</a>. Conforme a separação entre dicionário e modelo de dados adotada na disciplina, a
-  cardinalidade e a associação entre entidades pertencem ao modelo &mdash; estão registradas nesta seção e
-  representadas no DER &mdash; enquanto a <a href="#s4">seção 4</a> se ocupa da definição individual de
-  cada campo.</p>
+  <p style="margin-top:14px">Os atributos de relacionamento (<em>Contém</em>, <em>Utiliza</em>, <em>Inclui</em> e
+  <em>Treina</em>) ficam nas tabelas associativas da <a href="#s4">seção 4</a>. Como na disciplina, a cardinalidade
+  pertence ao modelo: está registrada nesta seção e no DER, e a <a href="#s4">seção 4</a> define cada campo.</p>
 </div>
 
 <!-- ============ 2. FLUXO DE DADOS ============ -->
 <div class="bloco" id="s2">
   <h2>2. Fluxo de dados (visão de DFD)</h2>
 
-  <p><strong>Venda.</strong> O cliente entra pelo site próprio, por um marketplace ou pelo balcão &rarr; o
-  cadastro é criado ou localizado em <code>CLIENTE</code> &rarr; grava-se um registro em
-  <code>PEDIDO</code>, ligado a esse cliente pelo relacionamento <em>Realiza</em> &rarr; cada item escolhido
-  liga o pedido a <code>PRODUTO</code> pelo <em>Contém</em>, com a quantidade (<code>QT_ITEM</code>) e o
-  preço praticado (<code>VL_UNITARIO</code>) &rarr; a comanda segue para o balcão e para a
-  cozinha, onde chapa, montagem e fritadeira trabalham em paralelo, e cada pessoa que atua sobre a comanda
-  é registrada pelo <em>Prepara</em> &rarr; o despacho confere os itens e monta o pacote &rarr; a expedição
-  roteiriza e entrega ao motoboy &rarr; <code>TP_STATUS_PEDIDO</code> acompanha essa progressão até
-  <em>entregue</em>.</p>
+  <p><strong>Venda.</strong> O cliente entra pelo site próprio, por um marketplace ou pelo balcão &rarr; o cadastro
+  é criado ou localizado em <code>CLIENTE</code> (com os telefones em <code>TELEFONE_CLIENTE</code>) &rarr; grava-se
+  um <code>PEDIDO</code> com o canal (<code>TP_CANAL_VENDA</code>) e a modalidade de entrega &rarr; cada item vai
+  para <code>ITEM_PEDIDO</code>, com a quantidade e o preço praticado &rarr; a comanda segue para o balcão e para a
+  cozinha &rarr; cada praça que trabalha no pedido gera uma linha em <code>ETAPA_PEDIDO</code>, com quem fez e se
+  houve erro &rarr; o despacho confere a notinha e monta o pacote, e a expedição entrega ao motoboy &rarr;
+  <code>TP_STATUS_PEDIDO</code> acompanha o pedido até <em>ENTREGUE</em> &rarr; o pedido entregue gera a
+  <code>NF_SAIDA</code> e a <code>CONTA_RECEBER</code>.</p>
 
-  <p><strong>Estoque e compras.</strong> O checklist semanal de contagem é feito no domingo à noite &rarr;
-  a contagem é registrada em <code>QT_ESTOQUE_ATUAL</code> e comparada ao <code>QT_ESTOQUE_MINIMO</code>
-  de cada <code>INGREDIENTE</code> &rarr; os insumos abaixo do mínimo entram nas ordens de compra de
-  segunda-feira: cada uma é uma <code>COMPRA</code> com sua <code>DT_EMISSAO</code>, que lista os insumos
-  pelo <em>Inclui</em>, com a <code>QT_COMPRADA</code> de cada um &rarr; a ordem é dirigida, pelo
-  <em>Atende</em>, a um <code>FORNECEDOR</code> que fornece aquele insumo (relacionamento <em>Fornece</em>),
-  respeitando seu <code>QT_PRAZO_PEDIDO</code> e seus <code>CD_DIA_ENTREGA</code> &rarr; na chegada da
-  mercadoria, registra-se a <code>DT_RECEBIMENTO</code> &rarr; a ficha técnica registrada no
-  <em>Utiliza</em> diz quais produtos dependem de cada insumo e em que quantidade
-  (<code>QT_UTILIZADA</code>), o que permite desligar o
-  <code>IN_DISPONIVEL</code> dos lanches afetados quando um ingrediente acaba no meio do expediente.</p>
+  <p><strong>Estoque e compras.</strong> A contagem de domingo à noite grava o <code>QT_ESTOQUE_ATUAL</code> de cada
+  <code>INGREDIENTE</code> &rarr; o que chegou ao <code>QT_ESTOQUE_MINIMO</code> entra na ordem de compra de segunda:
+  uma <code>COMPRA</code> por fornecedor, com os insumos em <code>INCLUI</code>, respeitando o
+  <code>QT_PRAZO_PEDIDO</code> e o <code>DIA_ENTREGA</code> de cada <code>FORNECEDOR</code> &rarr; na chegada, a
+  mercadoria é conferida com a <code>NF_ENTRADA</code>, registra-se a <code>DT_RECEBIMENTO</code> e a quantidade
+  comprada entra no estoque &rarr; a nota gera a <code>CONTA_PAGAR</code> de matéria-prima, e os custos fixos entram
+  como contas sem nota &rarr; a ficha técnica (<code>UTILIZA</code>) diz quais produtos dependem de cada insumo, o que
+  permite desligar o <code>IN_DISPONIVEL</code> dos lanches afetados quando um insumo acaba.</p>
 
-  <p>Toda leitura ou escrita nessas sete tabelas é registrada pelo log de acesso do SGBD
-  (<a href="#s5">§5</a>), o que sustenta a auditoria e a conformidade com a LGPD
-  (<a href="#s6">§6</a>).</p>
+  <p><strong>Equipe.</strong> Cada <code>FUNCIONARIO</code> treina nas <code>PRACA</code>s, e <code>TREINA</code>
+  guarda o início e a habilitação em cada uma &rarr; as tarefas do quadro de missões ficam em <code>TAREFA</code>, e
+  cada vez que alguém pega uma tarefa gera uma <code>EXECUCAO_TAREFA</code>, com início e conclusão.</p>
+
+  <p>Toda leitura ou escrita nas 22 tabelas é registrada pelo log de acesso do SGBD (<a href="#s5">§5</a>), o que
+  sustenta a auditoria e a conformidade com a LGPD (<a href="#s6">§6</a>).</p>
 </div>
 
 <!-- ============ 3. CONVENÇÕES ============ -->
 <div class="bloco" id="s3">
   <h2>3. Convenções do dicionário</h2>
 
-  <p><strong>SGBD:</strong> MySQL 8, mecanismo de armazenamento InnoDB &mdash; cuida da persistência dos
-  arquivos de dados, do log de transações (redo/undo) e mantém o índice primário clusterizado por chave.</p>
+  <p><strong>SGBD:</strong> MySQL 8, mecanismo de armazenamento InnoDB &mdash; cuida da persistência dos arquivos de
+  dados, do log de transações (redo/undo), aplica as chaves estrangeiras e os <code>CHECK</code>, e mantém o índice
+  primário clusterizado por chave.</p>
 
-  <p><strong>Codificação de caracteres:</strong> <code>utf8mb4</code> com collation
-  <code>utf8mb4_0900_ai_ci</code>. Escolhida em vez de <code>latin1</code> por cobrir a acentuação do
-  português sem perda em campos de nome e de texto livre, e por aceitar qualquer caractere Unicode que
-  apareça nas observações que o cliente digita no pedido.</p>
+  <p><strong>Codificação de caracteres:</strong> <code>utf8mb4</code> com collation <code>utf8mb4_0900_ai_ci</code>.
+  Escolhida em vez de <code>latin1</code> por cobrir a acentuação do português sem perda em campos de nome e de texto
+  livre, e por aceitar qualquer caractere Unicode que apareça nas observações que o cliente digita no pedido.</p>
 
   <h3>Notação formal (símbolos usados neste dicionário)</h3>
   <table>
@@ -325,607 +347,1020 @@
       <tr><td class="campo">( )</td><td>opcional</td></tr>
       <tr><td class="campo">{ } , n{ }m</td><td>iteração, com limite mínimo n e máximo m</td></tr>
       <tr><td class="campo">[ | ]</td><td>escolha obrigatória entre alternativas</td></tr>
-      <tr><td class="campo">/ /</td><td>rótulo de um grupo repetitivo</td></tr>
-      <tr><td class="campo">@</td><td>identificador (chave primária)</td></tr>
+      <tr><td class="campo">/ /</td><td>rótulo de um grupo (estrutura de dados)</td></tr>
+      <tr><td class="campo">@</td><td>identificador (chave primária); dois <code>@</code> na mesma expressão formam uma chave composta</td></tr>
       <tr><td class="campo">* *</td><td>comentário, fora da estrutura formal</td></tr>
-      <tr><td class="campo">" "</td><td>valores literais permitidos para o campo</td></tr>
+      <tr><td class="campo">" "</td><td>valor literal permitido para o campo</td></tr>
     </tbody>
   </table>
+  <p>Cada expressão traz o <strong>nome do atributo</strong> (por exemplo, <code>TP_STATUS_PEDIDO</code>), e os
+  valores permitidos aparecem numa linha própria logo abaixo, como <code>TP_STATUS_PEDIDO = ["RECEBIDO" | ...]</code>.
+  Na v1.1, as alternativas apareciam no lugar do atributo; a correção da Entrega 1 apontou isso.</p>
 
   <h3>Prefixos</h3>
-  <p>Prefixos-padrão da disciplina: <code>NM_</code> nome, <code>DT_</code> data, <code>ID_</code>
-  identificador (não sofre operação matemática), <code>CD_</code>/<code>CO_</code> código de domínio,
-  <code>QT_</code> quantidade, <code>TP_</code> tipo (categorização), <code>IN_</code> indicador booleano.
-  Todo campo deste dicionário recebe um desses prefixos, ainda quando o nome desenhado no DER não o trazia:
-  a coluna &ldquo;Significado e relevância&rdquo; registra o nome de origem sempre que houve renomeação.</p>
-  <p>Este caso usa ainda três prefixos fora dos sete padrão, pelo mesmo princípio de nomenclatura
-  autoexplicativa adotado no estudo de caso de referência:</p>
-  <ul class="limpa">
-    <li><code>DS_</code> &mdash; descrição / texto livre. Já aparece no estudo de caso de referência
-        (<code>DS_OBSERVACAO</code>).</li>
-    <li><code>VL_</code> &mdash; valor monetário. Já aparece no estudo de caso de referência
-        (<code>VL_TITULO</code>).</li>
-    <li><code>NU_</code> &mdash; numeração que não sofre operação matemática e que não identifica um
-        registro do próprio sistema (telefone, número de imóvel). Distingue-se de <code>ID_</code>,
-        reservado a códigos gerados pelo sistema.</li>
-  </ul>
+  <p>Prefixos-padrão da disciplina: <code>NM_</code> nome, <code>DT_</code> data, <code>ID_</code> identificador (não
+  sofre operação matemática), <code>CD_</code>/<code>CO_</code> código de domínio, <code>QT_</code> quantidade,
+  <code>TP_</code> tipo (categorização), <code>IN_</code> indicador booleano. Este caso usa ainda <code>DS_</code>
+  (descrição/texto livre) e <code>VL_</code> (valor monetário), que já aparecem no estudo de caso de referência, e
+  <code>NU_</code>, numeração que não sofre operação matemática e não identifica um registro do próprio sistema
+  (telefone, número do imóvel, número e série da nota). A coluna &ldquo;Significado e relevância&rdquo; registra o
+  nome de origem no DER sempre que houve renomeação (por exemplo, <code>st_pedido</code> virou
+  <code>TP_STATUS_PEDIDO</code>).</p>
+
+  <h3>Nomes no modelo lógico e no script</h3>
+  <p>As tabelas ficam em maiúsculas e sem acento (<code>FUNCIONARIO</code>, <code>ITEM_PEDIDO</code>). As colunas do
+  modelo lógico e do script são os nomes deste dicionário escritos em minúsculas (<code>TP_STATUS_PEDIDO</code> é a
+  coluna <code>tp_status_pedido</code>). No MySQL, nome de coluna não diferencia maiúsculas de minúsculas.</p>
 
   <h3>Tipos físicos</h3>
-  <p><code>integer</code>, <code>varchar(N)</code>, <code>text</code>, <code>numeric(p,e)</code>,
-  <code>date</code>, <code>datetime</code>, <code>char(N)</code>, <code>boolean</code>. O mesmo dado recebe
-  sempre o mesmo tipo em todo o modelo: telefone é <code>varchar(15)</code> tanto no cliente quanto no
-  fornecedor, e dia da semana é <code>char(3)</code> tanto na folga quanto na entrega.</p>
+  <p>Os tipos são os do script MySQL: <code>INT</code>, <code>VARCHAR(N)</code>, <code>DECIMAL(p,e)</code>,
+  <code>DATE</code>, <code>DATETIME</code>, <code>CHAR(N)</code> e <code>BOOLEAN</code>. O mesmo dado recebe sempre o
+  mesmo tipo: telefone é <code>VARCHAR(15)</code> no cliente e no fornecedor; dia da semana é <code>CHAR(3)</code> na
+  folga e na entrega; valor em reais é <code>DECIMAL(8,2)</code>; quantidade de insumo é <code>DECIMAL(10,3)</code>.</p>
+
+  <h3>Restrições de integridade</h3>
+  <p>A coluna <strong>Obrigatório</strong> diz se o campo aceita nulo (<code>NOT NULL</code>) e se é chave
+  (<code>PK</code>, <code>FK</code>). A coluna <strong>Restrições</strong> traz o resto: unicidade
+  (<code>UNIQUE</code>), valores permitidos (<code>CHECK</code>, com o nome da restrição no script), valor padrão
+  (<code>DEFAULT</code>) e a tabela referenciada pela chave estrangeira. Cada restrição cita o código da regra de
+  negócio (<code>RNxx</code>) do README. Quando a lista de valores é só do dicionário, sem <code>CHECK</code> no
+  script, isso está escrito. O traço (&mdash;) quer dizer que a coluna não tem restrição além do tipo e da obrigatoriedade. Nenhuma coluna tem valor padrão (<code>DEFAULT</code>), exceto <code>IN_ERRO</code>, e nenhuma chave estrangeira tem exclusão em cascata.</p>
 
   <h3>Origem de cada definição</h3>
-  <p>Cada linha da coluna &ldquo;Significado e relevância&rdquo; traz uma marcação de origem:</p>
   <ul class="limpa">
-    <li><span class="tag-e">[E]</span> <strong>Evidência</strong> &mdash; extraído do DER ou das
-        transcrições da entrevista de campo com o responsável pela loja (blocos 01 a 06, 02/09/2026).</li>
-    <li><span class="tag-m">[M]</span> <strong>Decisão de modelagem</strong> &mdash; escolha do grupo,
-        necessária para completar o dicionário, sem respaldo direto em documento: tamanhos de campo,
-        limites de iteração, obrigatoriedade e índices.</li>
+    <li><span class="tag-e">[E]</span> <strong>Evidência</strong> &mdash; extraído do DER ou da entrevista com o
+        responsável pela loja (blocos 01 a 06 do <a href="levantamento/levantamento.md">levantamento</a>, 02/09/2026).</li>
+    <li><span class="tag-m">[M]</span> <strong>Decisão de modelagem</strong> &mdash; escolha do grupo, sem respaldo
+        direto em documento: tamanhos de campo, obrigatoriedade, índices e premissas.</li>
   </ul>
 
-  <p><strong>Versão deste dicionário:</strong> v1.1, 13/outubro/2026. Revisa a v1.0 (21/setembro/2026) a
-  partir da correção da Entrega 1: <em>Realiza</em> passa a ser de um para muitos; <em>Contém</em> ganha a
-  quantidade e o preço praticado de cada item; <em>Utiliza</em> ganha a quantidade da ficha técnica;
-  <code>INGREDIENTE</code> ganha o estoque atual; e entra a entidade <code>COMPRA</code>, com os
-  relacionamentos <em>Atende</em> e <em>Inclui</em>. Qualquer alteração de estrutura deve
-  gerar nova revisão registrada nesta seção; a prática atende, ela própria, ao princípio de rastreabilidade
-  exigido pela LGPD (art. 6º, X).</p>
+  <p><strong>Versão deste dicionário:</strong> v1.2, 02/novembro/2026, para a Entrega 2. Revisa a v1.1
+  (13/outubro/2026):</p>
+  <ul class="limpa">
+    <li>passa de 7 entidades para <strong>15 entidades, 15 relacionamentos e 22 tabelas</strong>: entram
+        <code>NF_SAIDA</code>, <code>NF_ENTRADA</code>, <code>CONTA_PAGAR</code> e <code>CONTA_RECEBER</code> (pedido do
+        professor), e <code>PRACA</code>, <code>ETAPA_PEDIDO</code>, <code>TAREFA</code>, <code>EXECUCAO_TAREFA</code> e as
+        datas de <code>TREINA</code> (problemas P1, P2 e P3);</li>
+    <li>saem o <em>Fornece</em> (pedido do professor: a compra já liga fornecedor e insumo), o <em>Prepara</em> (trocado
+        pela etapa do pedido) e o multivalorado <code>pracas_aptas</code> (trocado por <code>TREINA</code>);</li>
+    <li>as cardinalidades passam para a leitura do brModelo e do exemplo do professor;</li>
+    <li>as expressões trazem o nome do atributo, e os valores ficam numa linha própria;</li>
+    <li>cada tabela traz as chaves estrangeiras e as restrições de cada coluna;</li>
+    <li>o status <code>EM_DESPACHO</code> sai (o despacho é uma praça) e o canal <code>SITE</code> continua.</li>
+  </ul>
+  <p>Qualquer alteração de estrutura deve gerar nova revisão registrada nesta seção; a prática atende, ela própria,
+  ao princípio de responsabilização e prestação de contas da LGPD (art. 6º, X).</p>
 </div>
 
-<!-- ============ 4. DICIONÁRIO POR ENTIDADE ============ -->
+<!-- ============ 4. DICIONÁRIO POR TABELA ============ -->
 <div class="bloco" id="s4">
-  <h2>4. Dicionário de dados por entidade</h2>
-  <p>Cada entidade é apresentada pela definição em notação formal, seguida da leitura dos símbolos usados,
-  da tabela de atributos e dos índices previstos. Os atributos multivalorados do DER aparecem como iteração
-  dentro da própria definição, e o atributo composto aparece como grupo rotulado, decomposto logo em seguida
-  como estrutura de dados.</p>
+  <h2>4. Dicionário de dados por tabela</h2>
+  <p>Cada tabela do modelo lógico é apresentada pela definição em notação formal, seguida da leitura dos símbolos,
+  da tabela de atributos com as restrições de integridade e dos índices previstos. As tabelas estão agrupadas por
+  área da operação:</p>
+  <ul class="limpa"><li><strong>Vendas:</strong> <a href="#t-cliente">CLIENTE</a>, <a href="#t-telefone_cliente">TELEFONE_CLIENTE</a>, <a href="#t-pedido">PEDIDO</a>, <a href="#t-item_pedido">ITEM_PEDIDO</a>, <a href="#t-produto">PRODUTO</a>, <a href="#t-nf_saida">NF_SAIDA</a>, <a href="#t-conta_receber">CONTA_RECEBER</a></li><li><strong>Produção e equipe:</strong> <a href="#t-funcionario">FUNCIONARIO</a>, <a href="#t-praca">PRACA</a>, <a href="#t-treina">TREINA</a>, <a href="#t-etapa_pedido">ETAPA_PEDIDO</a>, <a href="#t-tarefa">TAREFA</a>, <a href="#t-execucao_tarefa">EXECUCAO_TAREFA</a></li><li><strong>Estoque e compras:</strong> <a href="#t-ingrediente">INGREDIENTE</a>, <a href="#t-utiliza">UTILIZA</a>, <a href="#t-fornecedor">FORNECEDOR</a>, <a href="#t-telefone_fornecedor">TELEFONE_FORNECEDOR</a>, <a href="#t-dia_entrega">DIA_ENTREGA</a>, <a href="#t-compra">COMPRA</a>, <a href="#t-inclui">INCLUI</a>, <a href="#t-nf_entrada">NF_ENTRADA</a>, <a href="#t-conta_pagar">CONTA_PAGAR</a></li></ul>
 </div>
 
+<p class="grupo">VENDAS</p>
 <!-- CLIENTE -->
-<div class="entidade">
+<div class="entidade" id="t-cliente">
   <h2>CLIENTE</h2>
   <div class="notacao">
-    CLIENTE = @ID_CLIENTE + NM_CLIENTE<br>
-    &nbsp;&nbsp;+ 0{NU_TELEFONE}3<br>
-    &nbsp;&nbsp;+ (/ENDERECO/)<br>
-    &nbsp;&nbsp;+ (DT_NASCIMENTO) + DT_CADASTRO
+    CLIENTE = @ID_CLIENTE + NM_CLIENTE + (/ENDERECO/)<br>
+    &nbsp;&nbsp;+ (DT_NASCIMENTO) + DT_CADASTRO<br>
+    ENDERECO = NM_RUA + NU_NUMERO + NM_BAIRRO
   </div>
-  <p class="leitura"><strong>Leitura:</strong> <code>@ID_CLIENTE</code> é o identificador único;
-  <code>0{NU_TELEFONE}3</code> é a iteração que resolve o multivalorado <code>telefone (0,n)</code> do DER
-  &mdash; começa em zero porque o cadastro pode ser aberto sem contato e para em três, que é o máximo de
-  linhas que o atendimento registra por pessoa; <code>/ENDERECO/</code> é o rótulo do grupo que decompõe o
-  atributo composto do DER, e vem entre <code>( )</code> porque pedido de retirada ou de consumo no local
-  não exige endereço; <code>(DT_NASCIMENTO)</code> é opcional porque o cliente não precisa informar a data
-  para comprar.</p>
+  <p class="leitura"><strong>Leitura:</strong> <code>@ID_CLIENTE</code> é o identificador; <code>/ENDERECO/</code> é o grupo que decompõe o atributo composto <code>endereco</code> do DER e vem entre <code>( )</code> porque pedido de retirada ou de consumo no local não exige endereço; <code>(DT_NASCIMENTO)</code> é opcional porque depende do consentimento do cliente. Os telefones, multivalorados no DER, ficam na tabela <code>TELEFONE_CLIENTE</code>.</p>
 
   <table>
-    <thead>
-      <tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr>
-    </thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_CLIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização do cadastro do cliente na base; não sofre operação matemática.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_CLIENTE</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código de localização do cadastro do cliente; não sofre operação matemática. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_CLIENTE</td><td class="tipo">varchar(120)</td><td class="chave">Sim</td>
-        <td>Nome pelo qual o cliente é chamado no atendimento e identificado no pacote na hora do despacho.
-        É um dos dados básicos que o sistema de gestão da loja já registra hoje.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">NM_CLIENTE</td><td class="tipo">VARCHAR(120)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Nome pelo qual o cliente é chamado no atendimento e identificado no pacote na hora do despacho. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NU_TELEFONE <em>(por ocorrência)</em></td><td class="tipo">varchar(15)</td><td class="chave">Sim</td>
-        <td>Linha de contato do cliente. É por onde a loja faz a captação pelo WhatsApp antes de
-        redirecionar a venda para o site, e por onde o motoboy resolve problema de endereço na entrega.
-        Guardado só com dígitos, sem parênteses nem hífen, para o mesmo número não entrar duas vezes em
-        formatos diferentes. Corresponde ao <code>telefone</code> do DER.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">NM_RUA</td><td class="tipo">VARCHAR(120)</td><td class="chave">Não</td>
+        <td class="restr">Parte de /ENDERECO/</td>
+        <td>Logradouro do endereço de entrega. Fica vazio quando o cliente só retira ou consome no local. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_BAIRRO <em>(em /ENDERECO/)</em></td><td class="tipo">varchar(60)</td><td class="chave">Não</td>
-        <td>Bairro do endereço de entrega. Fica separado dos demais campos porque é por bairro que a
-        expedição agrupa pedidos ao roteirizar a saída do motoboy. <span class="tag-e">[E]</span></td>
+        <td class="campo">NU_NUMERO</td><td class="tipo">VARCHAR(10)</td><td class="chave">Não</td>
+        <td class="restr">Parte de /ENDERECO/</td>
+        <td>Número do imóvel. Guardado como texto porque aceita valores como &ldquo;123A&rdquo; e &ldquo;s/n&rdquo; e nunca entra em cálculo. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_RUA <em>(em /ENDERECO/)</em></td><td class="tipo">varchar(120)</td><td class="chave">Não</td>
-        <td>Logradouro do endereço de entrega. <span class="tag-e">[E]</span></td>
+        <td class="campo">NM_BAIRRO</td><td class="tipo">VARCHAR(60)</td><td class="chave">Não</td>
+        <td class="restr">Parte de /ENDERECO/</td>
+        <td>Bairro do endereço de entrega. Separado dos demais campos porque é por bairro que a expedição agrupa as entregas. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NU_NUMERO <em>(em /ENDERECO/)</em></td><td class="tipo">varchar(10)</td><td class="chave">Não</td>
-        <td>Número do imóvel dentro do logradouro. Guardado como texto, e não como inteiro, porque aceita
-        valores como &ldquo;123A&rdquo; e &ldquo;s/n&rdquo;, e porque número de casa nunca entra em cálculo.
-        <span class="tag-m">[M]</span></td>
+        <td class="campo">DT_NASCIMENTO</td><td class="tipo">DATE</td><td class="chave">Não</td>
+        <td class="restr">Opcional por consentimento (RN24)</td>
+        <td>Data de nascimento informada pelo cliente. A loja usa o aniversário em ações de relacionamento; como não é necessária para a venda, só é guardada com consentimento (ver <a href="#s6">§6</a>). <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">DT_NASCIMENTO</td><td class="tipo">date</td><td class="chave">Não</td>
-        <td>Data de nascimento informada pelo cliente. O sistema de gestão da loja já usa o aniversário como
-        gancho de relacionamento; por ser dado coletado para finalidade de marketing, e não para executar a
-        venda, fica opcional e depende de consentimento (ver <a href="#s6">§6</a>).
-        <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">DT_CADASTRO</td><td class="tipo">date</td><td class="chave">Sim</td>
-        <td>Data em que o cliente entrou na base. Marca o início da trajetória que a loja acompanha &mdash;
-        o que já comprou, com que frequência volta, quanto gastou no mês &mdash; e é o marco a partir do
-        qual se conta o prazo de retenção do cadastro. <span class="tag-e">[E]</span></td>
+        <td class="campo">DT_CADASTRO</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data em que o cliente entrou na base. Marca o início do histórico de compras e o prazo de retenção do cadastro. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
-
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_CLIENTE</code> (clusterizado); índice secundário em
-    <code>NM_CLIENTE</code> (localizar cadastro no atendimento); índice secundário em
-    <code>NU_TELEFONE</code> (o cliente chega pelo WhatsApp, e o telefone é como o atendimento o encontra);
-    índice secundário em <code>NM_BAIRRO</code> (agrupar entregas por região na roteirização).
-    <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK <code>ID_CLIENTE</code> (clusterizado); índice em <code>NM_CLIENTE</code> (localizar o cadastro no atendimento); índice em <code>NM_BAIRRO</code> (agrupar entregas por região). <span class="tag-m">[M]</span>
   </div>
+</div>
 
-  <h3>ENDERECO &mdash; estrutura de dados</h3>
+<!-- TELEFONE_CLIENTE -->
+<div class="entidade" id="t-telefone_cliente">
+  <h2>TELEFONE_CLIENTE</h2>
   <div class="notacao">
-    ENDERECO = NM_BAIRRO + NM_RUA + NU_NUMERO
+    TELEFONE_CLIENTE = @ID_CLIENTE + @NU_TELEFONE
   </div>
-  <p class="leitura"><strong>Leitura:</strong> decomposição do atributo composto <code>endereco</code> do
-  DER nos três elementos de dado que ele reúne. Cada um deles é indivisível para o sistema: não há razão
-  de negócio para quebrar o bairro ou o número em partes menores. A estrutura é definida aqui uma única
-  vez e referenciada pelo rótulo <code>/ENDERECO/</code> dentro de <code>CLIENTE</code>.</p>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do atributo multivalorado <code>telefone (0,n)</code> do cliente. Os dois <code>@</code> formam juntos a chave primária composta: o mesmo número não se repete para o mesmo cliente, e um cliente pode ter vários números.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">NU_TELEFONE</td><td class="tipo">VARCHAR(15)</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK composta</td>
+        <td>Linha de contato do cliente, usada pelo atendimento e pelo motoboy para resolver problema de entrega. Gravada sempre no mesmo formato, (DD) NNNNN-NNNN, para o mesmo número não entrar duas vezes de jeitos diferentes. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_CLIENTE</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; CLIENTE</td>
+        <td>Cliente dono do telefone. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK (<code>NU_TELEFONE</code>, <code>ID_CLIENTE</code>); índice da FK em <code>ID_CLIENTE</code> (listar os telefones de um cliente). <span class="tag-m">[M]</span>
+  </div>
 </div>
 
 <!-- PEDIDO -->
-<div class="entidade">
+<div class="entidade" id="t-pedido">
   <h2>PEDIDO</h2>
   <div class="notacao">
-    PEDIDO = @ID_PEDIDO + DT_HORA_PEDIDO + VL_TOTAL<br>
-    &nbsp;&nbsp;+ [TP_RECEBIDO | TP_EM_PREPARO | TP_EM_DESPACHO | TP_EM_ROTA | TP_ENTREGUE | TP_CANCELADO]<br>
-    &nbsp;&nbsp;+ [TP_DELIVERY | TP_RETIRADA | TP_LOCAL]<br>
-    &nbsp;&nbsp;+ [TP_SITE | TP_MARKETPLACE | TP_PRESENCIAL]<br>
-    &nbsp;&nbsp;+ (DS_OBSERVACAO_PEDIDO)
+    PEDIDO = @ID_PEDIDO + DT_HORA_PEDIDO + VL_TOTAL + TP_STATUS_PEDIDO<br>
+    &nbsp;&nbsp;+ TP_ENTREGA + (DS_OBSERVACAO_PEDIDO) + TP_CANAL_VENDA + ID_CLIENTE<br>
+    TP_STATUS_PEDIDO = ["RECEBIDO" | "EM_PREPARO" | "EM_ROTA" | "ENTREGUE" | "CANCELADO"]<br>
+    TP_ENTREGA = ["DELIVERY" | "RETIRADA" | "LOCAL"]<br>
+    TP_CANAL_VENDA = ["MARKETPLACE" | "SITE" | "PRESENCIAL"]
   </div>
-  <p class="leitura"><strong>Leitura:</strong> as três estruturas <code>[ | ]</code> exigem escolher
-  exatamente um valor de situação, um de modalidade de entrega e um de canal de venda;
-  <code>(DS_OBSERVACAO_PEDIDO)</code> fecha a definição como opcional, do mesmo jeito que
-  <code>(DS_OBSERVACAO)</code> no estudo de caso de referência. A definição não traz campo de cliente nem
-  de funcionário: a associação entre entidades (<em>Realiza</em>, de um para muitos, e <em>Prepara</em>, de
-  muitos para muitos) é objeto do modelo, registrada na <a href="#s1">§1</a>, e as chaves estrangeiras só
-  aparecem no modelo lógico.</p>
+  <p class="leitura"><strong>Leitura:</strong> A expressão traz o nome de cada atributo, e as linhas seguintes definem os valores permitidos de cada um com <code>[ | ]</code>: escolha obrigatória de exatamente um valor. <code>(DS_OBSERVACAO_PEDIDO)</code> é opcional. <code>ID_CLIENTE</code> é a chave estrangeira do relacionamento <em>Realiza</em>.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_PEDIDO</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização do registro do pedido; é o número da comanda que circula entre balcão,
-        cozinha e despacho. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_PEDIDO</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código de localização do pedido; é o número da comanda que circula entre balcão, cozinha e despacho. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">DT_HORA_PEDIDO</td><td class="tipo">datetime</td><td class="chave">Sim</td>
-        <td>Instante exato em que o pedido entrou na loja. A hora é parte indispensável do dado, não
-        acessória: com cerca de 100 pedidos por dia concentrados nos horários de pico, é o que permite medir
-        o tempo entre entrada e entrega e identificar as janelas de &ldquo;correria&rdquo; em que os erros
-        aparecem. Corresponde ao <code>dt_hora_pedido</code> do DER.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">DT_HORA_PEDIDO</td><td class="tipo">DATETIME</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Instante em que o pedido entrou na loja. A hora faz parte do dado: com cerca de 100 pedidos por dia concentrados nos picos, é ela que mostra as janelas de &ldquo;correria&rdquo; em que os erros aparecem. Corresponde ao <code>dt_hora_pedido</code> do DER. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">VL_TOTAL</td><td class="tipo">numeric(8,2)</td><td class="chave">Sim</td>
-        <td>Valor efetivamente cobrado no pedido fechado, já com a promoção aplicada. Alimenta o fechamento
-        de caixa do dia e o acompanhamento de gasto por cliente. Duas casas decimais por ser valor monetário
-        em real. <span class="tag-e">[E]</span></td>
+        <td class="campo">VL_TOTAL</td><td class="tipo">DECIMAL(8,2)</td><td class="chave">Sim</td>
+        <td class="restr">Igual à soma de QT_ITEM × VL_UNITARIO dos itens (RN01, conferido pela A01)</td>
+        <td>Valor cobrado no pedido, já com a promoção aplicada. É o valor que vai para a nota e para o recebimento. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">TP_STATUS_PEDIDO</td><td class="tipo">varchar(20)</td><td class="chave">Sim (escolha)</td>
-        <td>Etapa em que o pedido está dentro do fluxo de produção: recebido, em preparo na cozinha, em
-        despacho (montagem do pacote), em rota com o motoboy, entregue ou cancelado. É o campo que informa
-        ao balcão onde está cada comanda sem precisar perguntar à cozinha. Cancelamento e estorno são
-        restritos a gerente ou administrador master. Corresponde ao <code>st_pedido</code> do DER.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">TP_STATUS_PEDIDO</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">CHECK <code>CHK_PEDIDO_STATUS</code>: RECEBIDO, EM_PREPARO, EM_ROTA, ENTREGUE ou CANCELADO (RN13)</td>
+        <td>Situação do pedido no fluxo: recebido, em preparo na cozinha, em rota com o motoboy, entregue ou cancelado. O despacho não é situação: é uma praça, registrada em <code>ETAPA_PEDIDO</code>. Cancelar é só para gerente ou administrador master (RN14). Corresponde ao <code>st_pedido</code> do DER. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">TP_ENTREGA</td><td class="tipo">varchar(20)</td><td class="chave">Sim (escolha)</td>
-        <td>Modalidade de saída do pedido: <em>delivery</em>, que exige roteirização e motoboy;
-        <em>retirada</em>, em que o cliente busca no balcão; ou <em>local</em>, consumido na loja. Define se
-        o endereço do cliente é necessário e se o pedido entra na fila da expedição.
-        <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
+        <td class="campo">TP_ENTREGA</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">Valores DELIVERY, RETIRADA ou LOCAL (lista do dicionário, sem CHECK no script)</td>
+        <td>Modalidade de saída: <em>delivery</em>, com rota e motoboy; <em>retirada</em> no balcão; ou <em>local</em>, consumido na loja. Define se o endereço do cliente é necessário. <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">TP_CANAL_VENDA</td><td class="tipo">varchar(20)</td><td class="chave">Sim (escolha)</td>
-        <td>Por onde a venda foi fechada: <em>site próprio</em> da loja, <em>marketplace</em> (iFood, Keeta,
-        99 Food) ou <em>presencial</em>. Importa porque a margem muda em cada canal &mdash; o marketplace
-        faz repasse e pode subsidiar promoção, enquanto no site o pagamento vem por Pix direto. O WhatsApp
-        não é canal de venda: serve de captação e redireciona o cliente ao site. Corresponde ao
-        <code>cn_venda</code> do DER. <span class="tag-e">[E]</span></td>
+        <td class="campo">DS_OBSERVACAO_PEDIDO</td><td class="tipo">VARCHAR(200)</td><td class="chave">Não</td>
+        <td class="restr">&mdash;</td>
+        <td>Texto livre com a personalização do cliente: adicional, ingrediente retirado, instrução de entrega. Corresponde ao <code>obs_pedido</code> do DER. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">DS_OBSERVACAO_PEDIDO</td><td class="tipo">varchar(200)</td><td class="chave">Não</td>
-        <td>Texto livre com a personalização pedida pelo cliente &mdash; tirar ou acrescentar item, ponto da
-        carne, instrução de entrega. É a informação que chega à montagem e que, quando passa batida na
-        correria, compromete a experiência do pedido inteiro. Corresponde ao <code>obs_pedido</code> do DER.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">TP_CANAL_VENDA</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">CHECK <code>CHK_PEDIDO_CANAL</code>: MARKETPLACE, SITE ou PRESENCIAL (RN11)</td>
+        <td>Por onde a venda foi feita: <em>site</em> próprio da loja (canal principal), <em>marketplace</em> (iFood, 99Food, Keeta) ou <em>presencial</em>. O WhatsApp não é canal de venda: só capta o cliente e o leva ao site. Corresponde ao <code>cn_venda</code> do DER. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_CLIENTE</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; CLIENTE, sem exclusão em cascata (RN17, RN24)</td>
+        <td>Cliente que fez o pedido. Todo pedido tem exatamente um cliente (<em>Realiza</em>). <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_PEDIDO</code> (clusterizado); índice em
-    <code>DT_HORA_PEDIDO</code> (fechamento de caixa e relatório por período); índice em
-    <code>TP_STATUS_PEDIDO</code> (listar o que ainda está em produção); índice em
-    <code>TP_CANAL_VENDA</code> (apurar a margem por canal de venda). <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK <code>ID_PEDIDO</code> (clusterizado); índice da FK em <code>ID_CLIENTE</code>; índice em <code>DT_HORA_PEDIDO</code> (relatórios por período); índice em <code>TP_STATUS_PEDIDO</code> (o que ainda está em produção); índice em <code>TP_CANAL_VENDA</code> (faturamento por canal). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- ITEM_PEDIDO -->
+<div class="entidade" id="t-item_pedido">
+  <h2>ITEM_PEDIDO</h2>
+  <div class="notacao">
+    ITEM_PEDIDO = @ID_PRODUTO + @ID_PEDIDO + QT_ITEM + VL_UNITARIO
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do relacionamento N:N <em>Contém</em>, com os seus dois atributos. Os dois <code>@</code> formam a chave composta: o mesmo produto aparece uma só vez em cada pedido, e a quantidade fica em <code>QT_ITEM</code>.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_PRODUTO</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; PRODUTO</td>
+        <td>Produto vendido. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_PEDIDO</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; PEDIDO</td>
+        <td>Pedido em que o produto foi vendido. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_ITEM</td><td class="tipo">INT</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Quantas unidades do produto foram pedidas na mesma comanda. Sem ela, dois lanches iguais no mesmo pedido não se distinguem de um só. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">VL_UNITARIO</td><td class="tipo">DECIMAL(8,2)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Preço de uma unidade no momento da venda, já com a promoção. Fica no item porque o <code>VL_PRECO</code> do produto muda, e o pedido antigo precisa continuar mostrando o valor cobrado. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK (<code>ID_PRODUTO</code>, <code>ID_PEDIDO</code>); índice da FK em <code>ID_PEDIDO</code> (itens de um pedido). <span class="tag-m">[M]</span>
   </div>
 </div>
 
 <!-- PRODUTO -->
-<div class="entidade">
+<div class="entidade" id="t-produto">
   <h2>PRODUTO</h2>
   <div class="notacao">
-    PRODUTO = @ID_PRODUTO + NM_PRODUTO + (DS_PRODUTO) + VL_PRECO + IN_DISPONIVEL<br>
-    &nbsp;&nbsp;+ [TP_HAMBURGUER | TP_COMBO | TP_APERITIVO | TP_BEBIDA]
+    PRODUTO = @ID_PRODUTO + NM_PRODUTO + (DS_PRODUTO) + VL_PRECO<br>
+    &nbsp;&nbsp;+ IN_DISPONIVEL + TP_CATEGORIA<br>
+    TP_CATEGORIA = ["HAMBURGUER" | "COMBO" | "APERITIVO" | "BEBIDA"]
   </div>
-  <p class="leitura"><strong>Leitura:</strong> <code>@ID_PRODUTO</code> é o identificador único;
-  <code>(DS_PRODUTO)</code> vem entre parênteses porque nem todo item do cardápio precisa de descrição
-  &mdash; uma bebida se explica pelo nome; <code>[TP_HAMBURGUER | TP_COMBO | TP_APERITIVO | TP_BEBIDA]</code>
-  exige escolher exatamente uma categoria de cardápio.</p>
+  <p class="leitura"><strong>Leitura:</strong> <code>(DS_PRODUTO)</code> é opcional porque uma bebida se explica pelo nome; <code>TP_CATEGORIA</code> aparece na expressão pelo nome, e os valores permitidos ficam na linha de baixo.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_PRODUTO</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização do registro do item de cardápio. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_PRODUTO</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código de localização do item de cardápio. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_PRODUTO</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
-        <td>Nome comercial exibido no cardápio e impresso na comanda, como &ldquo;Vaca na Faca&rdquo;. É por
-        esse nome que a cozinha localiza a ficha técnica a ser montada. <span class="tag-e">[E]</span></td>
+        <td class="campo">NM_PRODUTO</td><td class="tipo">VARCHAR(60)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Nome comercial exibido no cardápio e impresso na comanda, como &ldquo;Vaca na Faca&rdquo;. É por ele que a cozinha localiza a ficha técnica. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">DS_PRODUTO</td><td class="tipo">varchar(200)</td><td class="chave">Não</td>
-        <td>Texto que descreve ao cliente a composição do item no site, antes da compra. Reduz pedido
-        devolvido por expectativa errada e dá ao cliente a informação de que precisa para pedir adicional ou
-        remoção de item. <span class="tag-m">[M]</span></td>
+        <td class="campo">DS_PRODUTO</td><td class="tipo">VARCHAR(200)</td><td class="chave">Não</td>
+        <td class="restr">&mdash;</td>
+        <td>Composição do item mostrada ao cliente antes da compra. Ajuda o cliente a pedir adicional ou remoção. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">VL_PRECO</td><td class="tipo">numeric(8,2)</td><td class="chave">Sim</td>
-        <td>Preço de venda cheio do item. É a base sobre a qual incidem as promoções, que podem ser
-        subsidiadas pela loja, pelo marketplace ou por ambos &mdash; por isso o preço fica no produto e o
-        desconto não é gravado aqui. <span class="tag-e">[E]</span></td>
+        <td class="campo">VL_PRECO</td><td class="tipo">DECIMAL(8,2)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Preço de venda cheio. As promoções (da loja, da plataforma ou das duas) não mudam este valor: o preço praticado fica em <code>ITEM_PEDIDO.VL_UNITARIO</code>. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">IN_DISPONIVEL</td><td class="tipo">boolean</td><td class="chave">Sim</td>
-        <td>Indica se o item pode ser vendido agora. Quando um insumo da ficha técnica acaba no meio do
-        expediente, o produto é desligado e sai do cardápio do site, em vez de gerar um pedido que a cozinha
-        terá de recusar. Corresponde ao <code>st_disponivel</code> do DER.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">IN_DISPONIVEL</td><td class="tipo">BOOLEAN</td><td class="chave">Sim</td>
+        <td class="restr">Fica FALSE quando falta insumo da ficha técnica (RN16)</td>
+        <td>Indica se o item pode ser vendido agora. Quando um insumo acaba no meio do expediente, o produto sai do cardápio em vez de gerar um pedido que a cozinha teria de recusar. Corresponde ao <code>st_disponivel</code> do DER. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">TP_CATEGORIA</td><td class="tipo">varchar(30)</td><td class="chave">Sim (escolha)</td>
-        <td>Agrupamento do item no cardápio: <em>hambúrguer individual</em>; <em>combo</em>, que inclui os
-        de mais de dois lanches, &ldquo;Casal&rdquo; e &ldquo;Família&rdquo;; <em>aperitivo</em> (batata,
-        onion, nuggets); ou <em>bebida</em>. Define a ordem em que os itens aparecem ao cliente e separa, na
-        cozinha, o que vai para a chapa do que vai para a fritadeira. Corresponde à <code>categoria</code>
-        do DER. <span class="tag-e">[E]</span></td>
+        <td class="campo">TP_CATEGORIA</td><td class="tipo">VARCHAR(30)</td><td class="chave">Sim</td>
+        <td class="restr">Valores HAMBURGUER, COMBO, APERITIVO ou BEBIDA (lista do dicionário, sem CHECK no script)</td>
+        <td>Grupo do item no cardápio: hambúrguer; combo (lanche com batata e bebida, e os combos Casal e Família); aperitivo (batata, onion, nuggets); ou bebida. Corresponde à <code>categoria</code> do DER. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_PRODUTO</code> (clusterizado); índice secundário em
-    <code>TP_CATEGORIA</code> (montar o cardápio agrupado por categoria); índice secundário em
-    <code>IN_DISPONIVEL</code> (filtrar o que está fora do ar a cada carregamento do site).
-    <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK <code>ID_PRODUTO</code> (clusterizado); índice em <code>TP_CATEGORIA</code> (cardápio agrupado); índice em <code>IN_DISPONIVEL</code> (o que está fora do ar). <span class="tag-m">[M]</span>
   </div>
 </div>
 
-<!-- INGREDIENTE -->
-<div class="entidade">
-  <h2>INGREDIENTE</h2>
+<!-- NF_SAIDA -->
+<div class="entidade" id="t-nf_saida">
+  <h2>NF_SAIDA</h2>
   <div class="notacao">
-    INGREDIENTE = @ID_INGREDIENTE + NM_INGREDIENTE + CD_UNIDADE_MEDIDA<br>
-    &nbsp;&nbsp;+ [TP_REFRIGERADO | TP_CONGELADO | TP_AMBIENTE]<br>
-    &nbsp;&nbsp;+ QT_ESTOQUE_MINIMO + DT_VALIDADE + QT_ESTOQUE_ATUAL
+    NF_SAIDA = @ID_NF_SAIDA + NU_NOTA + NU_SERIE + NU_CHAVE_ACESSO<br>
+    &nbsp;&nbsp;+ DT_EMISSAO_NOTA + ID_PEDIDO *ID_PEDIDO único: uma nota por pedido*
   </div>
-  <p class="leitura"><strong>Leitura:</strong> todos os campos são obrigatórios e estão conectados por
-  <code>+</code>; <code>[TP_REFRIGERADO | TP_CONGELADO | TP_AMBIENTE]</code> exige escolher exatamente uma
-  forma de conservação, que é o que determina onde o insumo é guardado e quanto estoque cabe.</p>
+  <p class="leitura"><strong>Leitura:</strong> <code>ID_PEDIDO</code> obrigatório e único implementa o 1:1 do relacionamento <em>Emite</em>: cada nota é de um pedido, e cada pedido tem no máximo uma nota. A nota não guarda valor: o valor está em <code>PEDIDO.VL_TOTAL</code> e nos títulos.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_INGREDIENTE</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização do registro do insumo. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_NF_SAIDA</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código interno da nota no banco. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_INGREDIENTE</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
-        <td>Nome pelo qual o insumo aparece no checklist de contagem e na ordem de compra &mdash; pão
-        brioche, queijo prato, alface, batata, óleo. É o item que a equipe conta manualmente na prancheta
-        todo domingo à noite. <span class="tag-e">[E]</span></td>
+        <td class="campo">NU_NOTA</td><td class="tipo">VARCHAR(9)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Número da nota fiscal, com até 9 dígitos. Guardado como texto porque é numeração sem cálculo (prefixo <code>NU_</code>). <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">CD_UNIDADE_MEDIDA</td><td class="tipo">varchar(10)</td><td class="chave">Sim</td>
-        <td>Unidade em que o insumo é contado e comprado, no domínio <code>"kg"</code>, <code>"l"</code> ou
-        <code>"un"</code>. Sem ela, um número solto como &ldquo;15&rdquo; não diz se são 15 quilos de queijo
-        ou 15 pacotes, e a ordem de compra sai errada. Corresponde ao <code>un_medida</code> do DER.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">NU_SERIE</td><td class="tipo">VARCHAR(3)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Série da nota, com até 3 dígitos. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">TP_CONSERVACAO</td><td class="tipo">varchar(20)</td><td class="chave">Sim (escolha)</td>
-        <td>Como o insumo precisa ser guardado: <em>refrigerado</em>, <em>congelado</em> ou
-        <em>ambiente</em>. Determina quanto se pode estocar &mdash; por limitação de espaço físico a loja
-        não mantém congelado para mais de duas semanas, enquanto item de mercearia com validade longa pode
-        ser comprado em volume quando o preço cai. <span class="tag-e">[E]</span></td>
+        <td class="campo">NU_CHAVE_ACESSO</td><td class="tipo">CHAR(44)</td><td class="chave">Sim</td>
+        <td class="restr">UNIQUE (RN23)</td>
+        <td>Chave de acesso de 44 dígitos que identifica a NF-e junto ao fisco. É chave candidata: não se repete. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">QT_ESTOQUE_MINIMO</td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
-        <td>Quantidade em que a ordem de compra tem de ser aberta. Não é um mínimo aspiracional: é o ponto
-        em que ainda dá tempo de pedir e receber antes de acabar, calculado a partir do consumo da semana e
-        do prazo do fornecedor &mdash; o queijo tem consumo de cerca de 40&nbsp;kg por semana e o gatilho
-        fica entre 10 e 15&nbsp;kg. Aceita casas decimais porque insumo a granel é contado em fração de
-        quilo ou litro. <span class="tag-e">[E]</span></td>
+        <td class="campo">DT_EMISSAO_NOTA</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data de emissão da nota, depois da entrega do pedido. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">DT_VALIDADE</td><td class="tipo">date</td><td class="chave">Sim</td>
-        <td>Data de vencimento do insumo em estoque. Sustenta a regra de consumir primeiro o que vence
-        antes: a loja já perdeu produto porque a equipe abriu o galão de validade mais longa e deixou o de
-        validade mais curta parado no estoque. <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">QT_ESTOQUE_ATUAL</td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
-        <td>Quantidade do insumo em estoque na última contagem, na unidade de <code>CD_UNIDADE_MEDIDA</code>.
-        É o número que o checklist de domingo à noite registra; comparado ao <code>QT_ESTOQUE_MINIMO</code>,
-        define o que entra na ordem de compra de segunda-feira. Aceita casas decimais pelo mesmo motivo do
-        estoque mínimo. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_PEDIDO</td><td class="tipo">INT</td><td class="chave">Sim (FK, único)</td>
+        <td class="restr">FK &rarr; PEDIDO; UNIQUE: uma nota por pedido (RN02)</td>
+        <td>Pedido faturado. Só pedido ENTREGUE gera nota (RN02, conferido pela A02). <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_INGREDIENTE</code> (clusterizado); índice secundário em
-    <code>DT_VALIDADE</code> (listar o que vence primeiro na conferência do estoque); índice secundário em
-    <code>TP_CONSERVACAO</code> (separar a contagem por local de armazenamento).
-    <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK <code>ID_NF_SAIDA</code>; índice único em <code>NU_CHAVE_ACESSO</code>; índice único em <code>ID_PEDIDO</code> (garante o 1:1 e acelera &ldquo;qual é a nota do pedido X&rdquo;). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- CONTA_RECEBER -->
+<div class="entidade" id="t-conta_receber">
+  <h2>CONTA_RECEBER</h2>
+  <div class="notacao">
+    CONTA_RECEBER = @ID_CONTA_RECEBER + TP_FORMA_PAGAMENTO + VL_TITULO<br>
+    &nbsp;&nbsp;+ DT_VENCIMENTO + (DT_PAGAMENTO) + ID_NF_SAIDA<br>
+    TP_FORMA_PAGAMENTO = ["REPASSE_MARKETPLACE" | "PIX_ONLINE" | "MAQUININHA"]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>(DT_PAGAMENTO)</code> fica vazio enquanto o dinheiro não entra: a situação do título (pago, em aberto ou atrasado) sai das datas e não é guardada. <code>ID_NF_SAIDA</code> é a chave do relacionamento <em>Gera_Receber</em>; uma nota pode ter mais de um título.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_CONTA_RECEBER</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código do título a receber. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_FORMA_PAGAMENTO</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">CHECK <code>CHK_RECEBER_FORMA</code>: REPASSE_MARKETPLACE, PIX_ONLINE ou MAQUININHA (RN12)</td>
+        <td>Como o dinheiro chega: repasse do marketplace, Pix online no site (pela TUNA Pagamentos) ou maquininha, no pagamento presencial. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">VL_TITULO</td><td class="tipo">DECIMAL(8,2)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Valor a receber. No marketplace, é o valor líquido do repasse; a comissão é premissa do grupo, porque a taxa real não foi informada. <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_VENCIMENTO</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data prevista para o dinheiro entrar (no marketplace, a data do repasse). <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_PAGAMENTO</td><td class="tipo">DATE</td><td class="chave">Não</td>
+        <td class="restr">Vazio = em aberto</td>
+        <td>Data em que o dinheiro entrou de fato. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_NF_SAIDA</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; NF_SAIDA</td>
+        <td>Nota que originou o recebimento. Pedido sem nota (cancelado) não gera conta a receber (RN02). <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_CONTA_RECEBER</code>; índice da FK em <code>ID_NF_SAIDA</code>; índice em <code>DT_VENCIMENTO</code> (o que vence no período). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<p class="grupo">PRODUÇÃO E EQUIPE</p>
+<!-- FUNCIONARIO -->
+<div class="entidade" id="t-funcionario">
+  <h2>FUNCIONARIO</h2>
+  <div class="notacao">
+    FUNCIONARIO = @ID_FUNCIONARIO + NM_FUNCIONARIO + TP_CARGO + DT_ADMISSAO<br>
+    &nbsp;&nbsp;+ TP_PERFIL_ACESSO + CD_DIA_FOLGA *uma folga semanal, regime 6x1*<br>
+    TP_PERFIL_ACESSO = ["ADMIN_MASTER" | "GERENTE" | "COLABORADOR"]<br>
+    CD_DIA_FOLGA = ["SEG" | "TER" | "QUA" | "QUI" | "SEX" | "SAB" | "DOM"]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> O comentário entre <code>* *</code> explica por que <code>CD_DIA_FOLGA</code> guarda um dia só. As praças em que a pessoa treina ou está habilitada, que no DER da Entrega 1 eram o multivalorado <code>pracas_aptas</code>, agora ficam na tabela <code>TREINA</code>, com as datas de início e de habilitação.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código de localização do funcionário; não sofre operação matemática. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_FUNCIONARIO</td><td class="tipo">VARCHAR(120)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Nome completo de quem trabalha na operação. Identifica a pessoa na escala do mês, fixada no quadro de avisos. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_CARGO</td><td class="tipo">VARCHAR(30)</td><td class="chave">Sim</td>
+        <td class="restr">Valores usados: SOCIEDADE, GERENCIA, COZINHA, BALCAO, DESPACHO, EXPEDICAO, MOTOBOY (sem CHECK no script)</td>
+        <td>Função da pessoa na operação. Os motoboys entram como funcionários, porque a pergunta sobre o número de pessoas da loja incluía os entregadores (bloco 01). Corresponde ao <code>cargo</code> do DER. <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_ADMISSAO</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data de entrada na equipe. O treino de cada praça tem a sua própria data de início, em <code>TREINA</code>. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_PERFIL_ACESSO</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">CHECK <code>CHK_FUNCIONARIO_PERFIL</code>: ADMIN_MASTER, GERENTE ou COLABORADOR (RN14, RN15)</td>
+        <td>Nível de permissão. O <em>administrador master</em> (dono ou sócio) é o único que mexe na parte fiscal, no faturamento e na conta bancária; o <em>gerente</em> cancela, estorna e altera itens de pedido; o <em>colaborador</em> opera o atendimento e a produção. Sustenta a matriz da <a href="#s6">§6</a>. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">CD_DIA_FOLGA</td><td class="tipo">CHAR(3)</td><td class="chave">Sim</td>
+        <td class="restr">Valores [&quot;SEG&quot; | &quot;TER&quot; | &quot;QUA&quot; | &quot;QUI&quot; | &quot;SEX&quot; | &quot;SAB&quot; | &quot;DOM&quot;] (lista do dicionário, sem CHECK no script)</td>
+        <td>Dia da folga semanal. A equipe trabalha em regime 6x1, com a folga definida na escala do mês (RN21). Corresponde ao <code>dias_folga</code> do DER. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_FUNCIONARIO</code> (clusterizado); índice em <code>CD_DIA_FOLGA</code> (montar a escala); índice em <code>TP_PERFIL_ACESSO</code> (auditar quem tem permissão elevada). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- PRACA -->
+<div class="entidade" id="t-praca">
+  <h2>PRACA</h2>
+  <div class="notacao">
+    PRACA = @ID_PRACA + NM_PRACA<br>
+    NM_PRACA = ["CHAPA" | "MONTAGEM" | "FRITADEIRA" | "DESPACHO"]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Cadastro dos quatro postos de trabalho da cozinha. <code>NM_PRACA</code> é único: cada praça aparece uma só vez.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_PRACA</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código da praça. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_PRACA</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">UNIQUE (RN18); valores CHAPA, MONTAGEM, FRITADEIRA ou DESPACHO (lista do dicionário, sem CHECK no script)</td>
+        <td>Nome do posto: chapa, montagem, fritadeira ou despacho. A comanda passa por essas praças, e a loja quer cada pessoa apta em todas elas (bloco 05). <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_PRACA</code>; índice único em <code>NM_PRACA</code>. <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- TREINA -->
+<div class="entidade" id="t-treina">
+  <h2>TREINA</h2>
+  <div class="notacao">
+    TREINA = @ID_FUNCIONARIO + @ID_PRACA + DT_INICIO_TREINO + (DT_HABILITACAO)
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do relacionamento N:N <em>Treina</em> (problema P3). Cada pessoa tem uma linha por praça. <code>(DT_HABILITACAO)</code> fica vazio enquanto a pessoa ainda treina: &ldquo;apto&rdquo; não é guardado, sai dessa data.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; FUNCIONARIO</td>
+        <td>Pessoa em treino ou já habilitada. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_PRACA</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; PRACA</td>
+        <td>Praça do treino. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_INICIO_TREINO</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Dia em que a pessoa começou a treinar nesta praça. O tempo varia de praça para praça e de pessoa para pessoa: há quem pegue a montagem no primeiro dia e leve mais de um mês na chapa (bloco 05). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_HABILITACAO</td><td class="tipo">DATE</td><td class="chave">Não</td>
+        <td class="restr">CHECK <code>CHK_TREINA_DATAS</code>: não pode ser anterior a DT_INICIO_TREINO (RN19)</td>
+        <td>Dia em que o gerente considerou a pessoa apta. O critério de habilitação é definido pelo responsável. A diferença entre as duas datas é a curva de aprendizado (G03). <span class="tag-m">[M]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK (<code>ID_FUNCIONARIO</code>, <code>ID_PRACA</code>); índice da FK em <code>ID_PRACA</code> (quem treina em cada praça). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- ETAPA_PEDIDO -->
+<div class="entidade" id="t-etapa_pedido">
+  <h2>ETAPA_PEDIDO</h2>
+  <div class="notacao">
+    ETAPA_PEDIDO = @ID_ETAPA + IN_ERRO + ID_PEDIDO + ID_FUNCIONARIO + ID_PRACA
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Cada linha é o trabalho de uma praça sobre um pedido, feito por uma pessoa (problema P1). Tem identificador próprio porque o par se repetiria: a mesma pessoa pode fazer duas praças no mesmo pedido, e uma praça pode ter duas pessoas.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_ETAPA</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código da etapa. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">IN_ERRO</td><td class="tipo">BOOLEAN</td><td class="chave">Sim</td>
+        <td class="restr">DEFAULT FALSE (RN18)</td>
+        <td>Indica se esta etapa saiu com erro. Nasce como FALSE e vira TRUE quando o erro é identificado. O erro é da etapa, e não do pedido inteiro: &ldquo;se o chapeiro errar o ponto e o resto da galera fizer tudo certo, a experiência do cliente já foi comprometida&rdquo; (bloco 05). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_PEDIDO</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; PEDIDO</td>
+        <td>Pedido em que a etapa aconteceu (<em>Passa_por</em>). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; FUNCIONARIO</td>
+        <td>Quem fez a etapa (<em>Executa</em>). É o dado que hoje a loja não tem: &ldquo;Hoje não&rdquo; dá para saber quem errou (bloco 05). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_PRACA</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; PRACA</td>
+        <td>Praça em que a etapa aconteceu (<em>Ocorre_em</em>). <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_ETAPA</code>; índices das FKs em <code>ID_PEDIDO</code>, <code>ID_FUNCIONARIO</code> e <code>ID_PRACA</code> (taxa de erro por praça e por pessoa, G01). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- TAREFA -->
+<div class="entidade" id="t-tarefa">
+  <h2>TAREFA</h2>
+  <div class="notacao">
+    TAREFA = @ID_TAREFA + NM_TAREFA
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Cadastro das tarefas do &ldquo;quadro de missões do dia&rdquo; (problema P2). O nome fica numa tabela própria para o tempo médio de cada tarefa não depender de texto livre repetido.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_TAREFA</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código da tarefa. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_TAREFA</td><td class="tipo">VARCHAR(60)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Descrição da missão, como abrir a loja, limpar a chapa ou fazer a contagem do estoque. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_TAREFA</code>. <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- EXECUCAO_TAREFA -->
+<div class="entidade" id="t-execucao_tarefa">
+  <h2>EXECUCAO_TAREFA</h2>
+  <div class="notacao">
+    EXECUCAO_TAREFA = @ID_EXECUCAO + DT_HORA_INICIO + (DT_HORA_CONCLUSAO)<br>
+    &nbsp;&nbsp;+ ID_TAREFA + ID_FUNCIONARIO
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Cada linha é uma vez em que uma pessoa pegou uma tarefa do quadro. <code>(DT_HORA_CONCLUSAO)</code> fica vazio quando a tarefa não foi concluída. O registro é uma melhoria proposta: a pessoa anota no quadro o início e o fim, e o líder lança no fim do turno.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_EXECUCAO</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código da execução. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_HORA_INICIO</td><td class="tipo">DATETIME</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Hora em que a pessoa começou a tarefa. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_HORA_CONCLUSAO</td><td class="tipo">DATETIME</td><td class="chave">Não</td>
+        <td class="restr">CHECK <code>CHK_EXECUCAO_HORAS</code>: não pode ser anterior a DT_HORA_INICIO (RN20)</td>
+        <td>Hora em que a tarefa terminou. A duração é a diferença entre as duas horas e não é guardada. A loja quer saber &ldquo;quanto tempo realmente leva&rdquo; cada missão (bloco 05). <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_TAREFA</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; TAREFA</td>
+        <td>Tarefa executada (<em>Refere</em>). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; FUNCIONARIO</td>
+        <td>Quem executou (<em>Cumpre</em>). <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_EXECUCAO</code>; índices das FKs em <code>ID_TAREFA</code> e <code>ID_FUNCIONARIO</code> (tempo médio por tarefa, G02). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<p class="grupo">ESTOQUE E COMPRAS</p>
+<!-- INGREDIENTE -->
+<div class="entidade" id="t-ingrediente">
+  <h2>INGREDIENTE</h2>
+  <div class="notacao">
+    INGREDIENTE = @ID_INGREDIENTE + NM_INGREDIENTE + CD_UNIDADE_MEDIDA<br>
+    &nbsp;&nbsp;+ TP_CONSERVACAO + QT_ESTOQUE_MINIMO + DT_VALIDADE + QT_ESTOQUE_ATUAL<br>
+    CD_UNIDADE_MEDIDA = ["KG" | "L" | "UN"]<br>
+    TP_CONSERVACAO = ["REFRIGERADO" | "CONGELADO" | "AMBIENTE"]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Todos os campos são obrigatórios. <code>CD_UNIDADE_MEDIDA</code> e <code>TP_CONSERVACAO</code> aparecem pelo nome, com os valores definidos abaixo.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_INGREDIENTE</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código de localização do insumo. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NM_INGREDIENTE</td><td class="tipo">VARCHAR(60)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Nome do insumo no checklist de contagem e na ordem de compra: pão brioche, queijo prato, alface, batata, óleo. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">CD_UNIDADE_MEDIDA</td><td class="tipo">VARCHAR(10)</td><td class="chave">Sim</td>
+        <td class="restr">Valores KG, L ou UN (lista do dicionário, sem CHECK no script)</td>
+        <td>Unidade em que o insumo é contado e comprado. Sem ela, &ldquo;15&rdquo; não diz se são 15 quilos ou 15 unidades. Corresponde ao <code>un_medida</code> do DER. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_CONSERVACAO</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">Valores REFRIGERADO, CONGELADO ou AMBIENTE (lista do dicionário, sem CHECK no script)</td>
+        <td>Como o insumo é guardado. Os congelados não passam de duas semanas de estoque, por falta de espaço (RN10). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_ESTOQUE_MINIMO</td><td class="tipo">DECIMAL(10,3)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Ponto de pedido: quando o estoque atual chega a esta quantidade, a ordem de compra precisa ser aberta (RN06). O queijo, com uso de cerca de 40&nbsp;kg por semana, pede compra entre 10 e 15&nbsp;kg (bloco 03). Aceita decimais porque insumo a granel é contado em fração de quilo ou litro. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_VALIDADE</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">Premissa: data do estoque que vence primeiro</td>
+        <td>Data de vencimento do insumo. Sustenta a regra de usar primeiro o que vence antes (RN07): a loja já perdeu mostarda por abrir o galão de validade mais longa (bloco 03). O controle por lote ficou fora do escopo. <span class="tag-e">[E]</span> <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_ESTOQUE_ATUAL</td><td class="tipo">DECIMAL(10,3)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Quantidade em estoque na última contagem, na unidade de <code>CD_UNIDADE_MEDIDA</code>. É o número que o checklist de domingo registra (problema P4) e que a compra recebida aumenta. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_INGREDIENTE</code> (clusterizado); índice em <code>DT_VALIDADE</code> (o que vence primeiro); índice em <code>TP_CONSERVACAO</code> (contagem por local de armazenamento). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- UTILIZA -->
+<div class="entidade" id="t-utiliza">
+  <h2>UTILIZA</h2>
+  <div class="notacao">
+    UTILIZA = @ID_PRODUTO + @ID_INGREDIENTE + QT_UTILIZADA
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do relacionamento N:N <em>Utiliza</em>: a ficha técnica. Cada insumo aparece uma vez por produto.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_PRODUTO</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; PRODUTO</td>
+        <td>Produto da ficha técnica. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_INGREDIENTE</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; INGREDIENTE</td>
+        <td>Insumo que entra no produto. Todo insumo deve estar em pelo menos uma ficha (RN04, conferido pela A04). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">QT_UTILIZADA</td><td class="tipo">DECIMAL(10,3)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Quanto do insumo entra em uma unidade do produto, na unidade do insumo. No lanche Vaca na Faca, a carne é de 180&nbsp;g e o queijo prato de 30&nbsp;g (bloco 04). Multiplicada pelas vendas, dá o consumo (G04). <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK (<code>ID_PRODUTO</code>, <code>ID_INGREDIENTE</code>); índice da FK em <code>ID_INGREDIENTE</code> (quais produtos usam um insumo, para tirá-los do cardápio quando ele faltar). <span class="tag-m">[M]</span>
   </div>
 </div>
 
 <!-- FORNECEDOR -->
-<div class="entidade">
+<div class="entidade" id="t-fornecedor">
   <h2>FORNECEDOR</h2>
   <div class="notacao">
-    FORNECEDOR = @ID_FORNECEDOR + NM_FORNECEDOR<br>
-    &nbsp;&nbsp;+ 0{NU_TELEFONE}3<br>
-    &nbsp;&nbsp;+ 0{CD_DIA_ENTREGA}7<br>
-    &nbsp;&nbsp;+ QT_PRAZO_PEDIDO + [TP_FIXO | TP_EVENTUAL]
+    FORNECEDOR = @ID_FORNECEDOR + NM_FORNECEDOR + QT_PRAZO_PEDIDO + TP_VINCULO<br>
+    TP_VINCULO = ["FIXO" | "EVENTUAL"]
   </div>
-  <p class="leitura"><strong>Leitura:</strong> <code>@ID_FORNECEDOR</code> identifica o fornecedor;
-  <code>0{NU_TELEFONE}3</code> e <code>0{CD_DIA_ENTREGA}7</code> são as iterações que resolvem os
-  multivalorados <code>telefone (0,n)</code> e <code>dias_entrega (0,n)</code> do DER &mdash; começam em
-  zero porque o cadastro pode ser aberto sem contato e sem dias fixos acertados, e o limite de sete nos
-  dias vem de a semana ter sete dias; <code>[TP_FIXO | TP_EVENTUAL]</code> exige escolher exatamente um
-  tipo de vínculo comercial.</p>
+  <p class="leitura"><strong>Leitura:</strong> Os telefones e os dias de entrega, multivalorados no DER, ficam em <code>TELEFONE_FORNECEDOR</code> e <code>DIA_ENTREGA</code>.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_FORNECEDOR</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização do registro do fornecedor. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_FORNECEDOR</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código de localização do fornecedor. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_FORNECEDOR</td><td class="tipo">varchar(60)</td><td class="chave">Sim</td>
-        <td>Razão social ou nome pelo qual a loja identifica a empresa na ordem de compra. A loja trabalha
-        com 5 a 10 fornecedores ativos por semana, o que torna o nome o principal ponto de conferência na
-        chegada da mercadoria. <span class="tag-e">[E]</span></td>
+        <td class="campo">NM_FORNECEDOR</td><td class="tipo">VARCHAR(60)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Nome da empresa na ordem de compra. A loja trabalha com 5 a 10 fornecedores por semana (bloco 03). <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">NU_TELEFONE <em>(por ocorrência)</em></td><td class="tipo">varchar(15)</td><td class="chave">Sim</td>
-        <td>Linha de contato usada para emitir a ordem de compra e para cobrar entrega atrasada. Guardado
-        só com dígitos, pelo mesmo motivo do telefone do cliente: evitar o mesmo número gravado em dois
-        formatos. Corresponde ao <code>telefone</code> do DER. <span class="tag-m">[M]</span></td>
+        <td class="campo">QT_PRAZO_PEDIDO</td><td class="tipo">INT</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Dias de antecedência que a ordem precisa ter para a entrega acontecer. Se o fornecedor de queijo entrega na quinta e a ordem não sai até terça, o insumo não chega (RN09). Corresponde ao <code>pz_pedido</code> do DER. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">CD_DIA_ENTREGA <em>(por ocorrência)</em></td><td class="tipo">char(3)</td><td class="chave">Sim</td>
-        <td>Dia da semana em que aquele fornecedor entrega, no domínio <code>"SEG"</code>,
-        <code>"TER"</code>, <code>"QUA"</code>, <code>"QUI"</code>, <code>"SEX"</code>, <code>"SAB"</code>,
-        <code>"DOM"</code>. É uma restrição real do mercado de <em>food service</em>: há fornecedor que
-        entrega em qualquer dia, há o que entrega dois dias por semana e há o que atende a região uma única
-        vez por semana. Combinado ao <code>QT_PRAZO_PEDIDO</code>, é o que permite planejar a compra sem
-        furar o estoque. Corresponde ao <code>dias_entrega</code> do DER.
-        <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">QT_PRAZO_PEDIDO</td><td class="tipo">integer</td><td class="chave">Sim</td>
-        <td>Quantidade de dias entre a emissão da ordem de compra e a entrega. É o campo que define a
-        antecedência da compra: se o fornecedor de queijo entrega na quinta e a ordem não sai até terça, o
-        insumo não chega naquela semana. Sem esse número, o cálculo do ponto de pedido não fecha.
-        Corresponde ao <code>pz_pedido</code> do DER. <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">TP_VINCULO</td><td class="tipo">varchar(20)</td><td class="chave">Sim (escolha)</td>
-        <td>Natureza da relação comercial: <em>fixo</em>, quando há parceria e entrega programada recorrente
-        &mdash; caso do fornecedor de proteína, bacon e batata, que entrega toda quinta &mdash; ou
-        <em>eventual</em>, acionado por oportunidade de preço ou quando o fornecedor habitual falha. Orienta
-        para quem ligar primeiro na hora da reposição. <span class="tag-e">[E]</span></td>
+        <td class="campo">TP_VINCULO</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">Valores FIXO ou EVENTUAL (lista do dicionário, sem CHECK no script)</td>
+        <td><em>Fixo</em>, quando há parceria e entrega programada, como o fornecedor de proteína, bacon e batata, que entrega toda quinta; ou <em>eventual</em>, acionado por oportunidade de preço ou quando o habitual falha. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_FORNECEDOR</code> (clusterizado); índice secundário em
-    <code>NM_FORNECEDOR</code> (busca por nome na emissão da ordem de compra); índice secundário em
-    <code>CD_DIA_ENTREGA</code> (responder &ldquo;quem entrega na quinta?&rdquo; ao montar a ordem de
-    compra da semana). <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK <code>ID_FORNECEDOR</code> (clusterizado); índice em <code>NM_FORNECEDOR</code> (busca na emissão da ordem). <span class="tag-m">[M]</span>
   </div>
 </div>
 
-<!-- FUNCIONARIO -->
-<div class="entidade">
-  <h2>FUNCIONARIO</h2>
+<!-- TELEFONE_FORNECEDOR -->
+<div class="entidade" id="t-telefone_fornecedor">
+  <h2>TELEFONE_FORNECEDOR</h2>
   <div class="notacao">
-    FUNCIONARIO = @ID_FUNCIONARIO + NM_FUNCIONARIO + TP_CARGO + DT_ADMISSAO<br>
-    &nbsp;&nbsp;+ [TP_ADMIN_MASTER | TP_GERENTE | TP_COLABORADOR]<br>
-    &nbsp;&nbsp;+ 1{TP_PRACA}4<br>
-    &nbsp;&nbsp;+ CD_DIA_FOLGA *uma folga semanal, regime 6x1*
+    TELEFONE_FORNECEDOR = @ID_FORNECEDOR + @NU_TELEFONE
   </div>
-  <p class="leitura"><strong>Leitura:</strong> <code>@ID_FUNCIONARIO</code> é o identificador único; os
-  campos conectados por <code>+</code> são todos obrigatórios;
-  <code>[TP_ADMIN_MASTER | TP_GERENTE | TP_COLABORADOR]</code> exige escolher exatamente um perfil de
-  acesso; <code>1{TP_PRACA}4</code> é a iteração que resolve o multivalorado
-  <code>pracas_aptas (1, n)</code> do DER &mdash; registra de uma a quatro praças, e o limite de quatro vem
-  de a cozinha ter quatro postos de trabalho; o comentário entre <code>* *</code> explica por que
-  <code>CD_DIA_FOLGA</code> guarda um único dia, sem fazer parte da estrutura formal.</p>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do multivalorado <code>telefone (0,n)</code> do fornecedor, com chave composta.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_FUNCIONARIO</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização do registro do funcionário; não sofre operação matemática.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">NU_TELEFONE</td><td class="tipo">VARCHAR(15)</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK composta</td>
+        <td>Linha usada para emitir a ordem de compra e cobrar entrega atrasada, no mesmo formato do telefone do cliente. <span class="tag-m">[M]</span></td>
       </tr>
       <tr>
-        <td class="campo">NM_FUNCIONARIO</td><td class="tipo">varchar(120)</td><td class="chave">Sim</td>
-        <td>Nome completo de quem trabalha na operação. Identifica a pessoa na escala do mês, afixada no
-        quadro de avisos todo primeiro dia do mês. <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">TP_CARGO</td><td class="tipo">varchar(30)</td><td class="chave">Sim</td>
-        <td>Função contratada da pessoa na operação &mdash; cozinha, balcão, despacho, expedição, motoboy,
-        gerência ou sociedade. Separa quem é equipe interna com contrato mensal de quem atua na entrega,
-        distinção que a loja já faz no controle de custo de pessoal. Corresponde ao <code>cargo</code> do
-        DER. <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">DT_ADMISSAO</td><td class="tipo">date</td><td class="chave">Sim</td>
-        <td>Data de entrada na equipe. Serve de referência para a curva de aprendizado: a loja acompanha
-        quanto tempo cada pessoa leva para dominar cada praça, e esse tempo se conta a partir da admissão.
-        <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">TP_PERFIL_ACESSO</td><td class="tipo">varchar(20)</td><td class="chave">Sim (escolha)</td>
-        <td>Nível de permissão no sistema. <em>Administrador master</em> (dono ou sócio) é o único que
-        acessa relatório fiscal, faturamento e conta bancária; <em>gerente</em> pode estornar pedido e
-        adicionar ou remover produto; <em>colaborador</em> opera apenas o atendimento e a produção. É o
-        campo que sustenta a matriz de acesso da <a href="#s6">§6</a>. Corresponde ao
-        <code>perfil_acesso</code> do DER. <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">TP_PRACA <em>(por ocorrência)</em></td><td class="tipo">varchar(20)</td><td class="chave">Sim</td>
-        <td>Posto de trabalho da cozinha em que a pessoa já está apta: <em>chapa</em>, <em>montagem</em>,
-        <em>fritadeira</em> ou <em>despacho</em>. A loja forma cada colaborador para todas as praças,
-        buscando independência da operação, mas o domínio de cada uma leva tempos diferentes &mdash; há quem
-        pegue a montagem no primeiro dia e leve mais de um mês na chapa. É este registro que permite escalar
-        o turno sabendo quem cobre cada posto. Corresponde ao <code>pracas_aptas</code> do DER.
-        <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">CD_DIA_FOLGA</td><td class="tipo">char(3)</td><td class="chave">Sim</td>
-        <td>Dia da semana reservado à folga, no mesmo domínio de <code>CD_DIA_ENTREGA</code>. A equipe
-        trabalha em regime 6x1, com uma folga semanal definida na escala do mês &mdash; por isso o campo
-        guarda um único dia, e não uma lista. É o dado que permite fechar a escala sem deixar praça
-        descoberta. Corresponde ao <code>dias_folga</code> do DER. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_FORNECEDOR</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; FORNECEDOR</td>
+        <td>Fornecedor dono do telefone. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_FUNCIONARIO</code> (clusterizado); índice secundário em
-    <code>CD_DIA_FOLGA</code> (montar a escala do mês exige listar rapidamente quem folga em cada dia);
-    índice secundário em <code>TP_PERFIL_ACESSO</code> (auditar quem detém permissão elevada).
-    <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK (<code>ID_FORNECEDOR</code>, <code>NU_TELEFONE</code>). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- DIA_ENTREGA -->
+<div class="entidade" id="t-dia_entrega">
+  <h2>DIA_ENTREGA</h2>
+  <div class="notacao">
+    DIA_ENTREGA = @CD_DIA_ENTREGA + @ID_FORNECEDOR<br>
+    CD_DIA_ENTREGA = ["SEG" | "TER" | "QUA" | "QUI" | "SEX" | "SAB" | "DOM"]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do multivalorado <code>dias_entrega (0,n)</code> do fornecedor. Um fornecedor tem de 0 a 7 dias de entrega.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">CD_DIA_ENTREGA</td><td class="tipo">CHAR(3)</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK composta; valores [&quot;SEG&quot; | &quot;TER&quot; | &quot;QUA&quot; | &quot;QUI&quot; | &quot;SEX&quot; | &quot;SAB&quot; | &quot;DOM&quot;] (lista do dicionário, sem CHECK no script)</td>
+        <td>Dia da semana em que o fornecedor entrega. Há fornecedor que entrega &ldquo;somente uma vez na semana&rdquo;, outro em &ldquo;qualquer dia&rdquo; e outro em &ldquo;dois dias na semana&rdquo; (bloco 03). Corresponde ao <code>dias_entrega</code> do DER. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_FORNECEDOR</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; FORNECEDOR</td>
+        <td>Fornecedor que entrega nesse dia. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK (<code>CD_DIA_ENTREGA</code>, <code>ID_FORNECEDOR</code>), que já responde &ldquo;quem entrega na quinta?&rdquo;; índice da FK em <code>ID_FORNECEDOR</code>. <span class="tag-m">[M]</span>
   </div>
 </div>
 
 <!-- COMPRA -->
-<div class="entidade">
+<div class="entidade" id="t-compra">
   <h2>COMPRA</h2>
   <div class="notacao">
-    COMPRA = @ID_COMPRA + DT_EMISSAO + (DT_RECEBIMENTO)
+    COMPRA = @ID_COMPRA + DT_EMISSAO + (DT_RECEBIMENTO) + ID_FORNECEDOR
   </div>
-  <p class="leitura"><strong>Leitura:</strong> <code>@ID_COMPRA</code> identifica a ordem de compra;
-  <code>(DT_RECEBIMENTO)</code> vem entre parênteses porque fica vazio enquanto a mercadoria não chega. A
-  definição não traz campo de fornecedor nem de insumo: essas associações (<em>Atende</em> e
-  <em>Inclui</em>) são objeto do modelo, registradas na <a href="#s1">§1</a>.</p>
+  <p class="leitura"><strong>Leitura:</strong> <code>(DT_RECEBIMENTO)</code> fica vazio enquanto a mercadoria não chega. <code>ID_FORNECEDOR</code> é a chave do relacionamento <em>Atende</em>: cada ordem vai para um único fornecedor.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">ID_COMPRA</td><td class="tipo">integer</td><td class="chave">Sim (PK)</td>
-        <td>Código de localização da ordem de compra; não sofre operação matemática.
-        <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_COMPRA</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código da ordem de compra. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">DT_EMISSAO</td><td class="tipo">date</td><td class="chave">Sim</td>
-        <td>Data em que a ordem de compra foi emitida ao fornecedor; na rotina da loja, a segunda-feira
-        seguinte à contagem de domingo. Somada ao <code>QT_PRAZO_PEDIDO</code> do fornecedor, indica quando a
-        mercadoria deve chegar. <span class="tag-e">[E]</span></td>
+        <td class="campo">DT_EMISSAO</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data em que a ordem foi emitida; na rotina da loja, a segunda-feira depois da contagem de domingo (bloco 03). <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">DT_RECEBIMENTO</td><td class="tipo">date</td><td class="chave">Não</td>
-        <td>Data em que a mercadoria chegou à loja. Fica vazia enquanto a ordem está em aberto, o que
-        permite listar as compras ainda não entregues e cobrar o fornecedor atrasado.
-        <span class="tag-m">[M]</span></td>
+        <td class="campo">DT_RECEBIMENTO</td><td class="tipo">DATE</td><td class="chave">Não</td>
+        <td class="restr">Vazio = compra em aberto; preenchido exige NF de entrada (RN03, A03)</td>
+        <td>Data em que a mercadoria chegou e foi conferida. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_FORNECEDOR</td><td class="tipo">INT</td><td class="chave">Sim (FK)</td>
+        <td class="restr">FK &rarr; FORNECEDOR (RN09)</td>
+        <td>Fornecedor da ordem. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
   <div class="indices">
-    <strong>Índices:</strong> PK <code>ID_COMPRA</code> (clusterizado); índice secundário em
-    <code>DT_EMISSAO</code> (compras de um período); índice secundário em <code>DT_RECEBIMENTO</code>
-    (ordens ainda em aberto). <span class="tag-m">[M]</span>
+    <strong>Índices:</strong> PK <code>ID_COMPRA</code> (clusterizado); índice da FK em <code>ID_FORNECEDOR</code>; índice em <code>DT_RECEBIMENTO</code> (ordens em aberto). <span class="tag-m">[M]</span>
   </div>
 </div>
 
-<!-- ATRIBUTOS DE RELACIONAMENTO -->
-<div class="entidade">
-  <h2>ATRIBUTOS DE RELACIONAMENTO</h2>
+<!-- INCLUI -->
+<div class="entidade" id="t-inclui">
+  <h2>INCLUI</h2>
   <div class="notacao">
-    CONTEM = QT_ITEM + VL_UNITARIO *por par pedido&ndash;produto*<br>
-    UTILIZA = QT_UTILIZADA *por par produto&ndash;ingrediente*<br>
-    INCLUI = QT_COMPRADA *por par compra&ndash;ingrediente*
+    INCLUI = @ID_COMPRA + @ID_INGREDIENTE + QT_COMPRADA
   </div>
-  <p class="leitura"><strong>Leitura:</strong> os três relacionamentos que carregam atributos são definidos
-  aqui só pelos seus campos próprios; quais entidades cada um liga, e com que cardinalidade, está na
-  <a href="#s1">§1</a>, e as chaves que identificam cada par só aparecem no modelo lógico. O comentário entre
-  <code>* *</code> indica a que par de ocorrências o valor se refere.</p>
+  <p class="leitura"><strong>Leitura:</strong> Tabela do relacionamento N:N <em>Inclui</em>: os insumos de cada ordem de compra.</p>
 
   <table>
-    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
     <tbody>
       <tr>
-        <td class="campo">QT_ITEM <em>(Contém)</em></td><td class="tipo">integer</td><td class="chave">Sim</td>
-        <td>Quantas unidades daquele produto foram pedidas na mesma comanda. Sem ela, dois lanches iguais no
-        mesmo pedido não se distinguem de um só. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_INGREDIENTE</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; INGREDIENTE</td>
+        <td>Insumo comprado. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">VL_UNITARIO <em>(Contém)</em></td><td class="tipo">numeric(8,2)</td><td class="chave">Sim</td>
-        <td>Preço de uma unidade do produto no momento da venda, já com a promoção aplicada. Fica no item, e
-        não só no produto, porque o <code>VL_PRECO</code> muda com reajuste e promoção, e o pedido antigo
-        precisa continuar mostrando o valor cobrado. <span class="tag-e">[E]</span></td>
+        <td class="campo">ID_COMPRA</td><td class="tipo">INT</td><td class="chave">Sim (PK, FK)</td>
+        <td class="restr">PK composta; FK &rarr; COMPRA</td>
+        <td>Ordem de compra. <span class="tag-e">[E]</span></td>
       </tr>
       <tr>
-        <td class="campo">QT_UTILIZADA <em>(Utiliza)</em></td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
-        <td>Quantidade do insumo que entra em uma unidade do produto, na unidade de
-        <code>CD_UNIDADE_MEDIDA</code> do ingrediente. É o que torna a ficha técnica mensurável: multiplicada
-        pelas vendas, estima o consumo de cada insumo na semana. <span class="tag-e">[E]</span></td>
-      </tr>
-      <tr>
-        <td class="campo">QT_COMPRADA <em>(Inclui)</em></td><td class="tipo">numeric(10,3)</td><td class="chave">Sim</td>
-        <td>Quantidade do insumo pedida ao fornecedor naquela ordem de compra, na unidade de
-        <code>CD_UNIDADE_MEDIDA</code>. Aceita casas decimais porque insumo a granel é comprado em fração de
-        quilo ou litro. <span class="tag-e">[E]</span></td>
+        <td class="campo">QT_COMPRADA</td><td class="tipo">DECIMAL(10,3)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Quantidade pedida ao fornecedor nesta ordem, na unidade do insumo. No recebimento, é somada ao <code>QT_ESTOQUE_ATUAL</code>. <span class="tag-e">[E]</span></td>
       </tr>
     </tbody>
   </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK (<code>ID_COMPRA</code>, <code>ID_INGREDIENTE</code>); índice da FK em <code>ID_INGREDIENTE</code> (histórico de compras de um insumo). <span class="tag-m">[M]</span>
+  </div>
 </div>
+
+<!-- NF_ENTRADA -->
+<div class="entidade" id="t-nf_entrada">
+  <h2>NF_ENTRADA</h2>
+  <div class="notacao">
+    NF_ENTRADA = @ID_NF_ENTRADA + NU_NOTA + NU_SERIE + NU_CHAVE_ACESSO<br>
+    &nbsp;&nbsp;+ DT_EMISSAO_NOTA + ID_COMPRA *ID_COMPRA único: uma nota por compra*
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>ID_COMPRA</code> obrigatório e único implementa o 1:1 do relacionamento <em>Recebe</em>.</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_NF_ENTRADA</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código interno da nota no banco. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NU_NOTA</td><td class="tipo">VARCHAR(9)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Número da nota do fornecedor, guardado como texto. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NU_SERIE</td><td class="tipo">VARCHAR(3)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Série da nota. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">NU_CHAVE_ACESSO</td><td class="tipo">CHAR(44)</td><td class="chave">Sim</td>
+        <td class="restr">UNIQUE (RN23)</td>
+        <td>Chave de acesso de 44 dígitos da NF-e; não se repete. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_EMISSAO_NOTA</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data de emissão da nota pelo fornecedor. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_COMPRA</td><td class="tipo">INT</td><td class="chave">Sim (FK, único)</td>
+        <td class="restr">FK &rarr; COMPRA; UNIQUE: uma nota por compra (RN03)</td>
+        <td>Compra que a nota acompanha. A mercadoria é conferida contra a nota no recebimento. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_NF_ENTRADA</code>; índice único em <code>NU_CHAVE_ACESSO</code>; índice único em <code>ID_COMPRA</code>. <span class="tag-m">[M]</span>
+  </div>
+</div>
+
+<!-- CONTA_PAGAR -->
+<div class="entidade" id="t-conta_pagar">
+  <h2>CONTA_PAGAR</h2>
+  <div class="notacao">
+    CONTA_PAGAR = @ID_CONTA_PAGAR + DS_CONTA_PAGAR + TP_DESPESA + VL_TITULO<br>
+    &nbsp;&nbsp;+ DT_VENCIMENTO + (DT_PAGAMENTO) + (ID_NF_ENTRADA) *com nota, só MATERIA_PRIMA*<br>
+    TP_DESPESA = ["MATERIA_PRIMA" | "CUSTO_FIXO"]
+  </div>
+  <p class="leitura"><strong>Leitura:</strong> <code>(ID_NF_ENTRADA)</code> é opcional porque o custo fixo não tem nota de compra; o comentário entre <code>* *</code> lembra a restrição: título com nota é sempre de matéria-prima. Uma nota pode virar mais de um boleto (<em>Gera_Pagar</em>).</p>
+
+  <table>
+    <thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Restrições</th><th>Significado e relevância</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="campo">ID_CONTA_PAGAR</td><td class="tipo">INT</td><td class="chave">Sim (PK)</td>
+        <td class="restr">PK</td>
+        <td>Código do título a pagar. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DS_CONTA_PAGAR</td><td class="tipo">VARCHAR(100)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Descrição livre do título, como &ldquo;aluguel de outubro&rdquo; ou &ldquo;boleto de bebidas&rdquo;. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">TP_DESPESA</td><td class="tipo">VARCHAR(20)</td><td class="chave">Sim</td>
+        <td class="restr">CHECK <code>CHK_PAGAR_DESPESA</code>: MATERIA_PRIMA ou CUSTO_FIXO (RN22)</td>
+        <td>Separa o boleto de insumo, que &ldquo;entra como mercadoria, matéria-prima&rdquo;, dos custos fixos: aluguel, gás, luz, internet, contador e outros (bloco 03). <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">VL_TITULO</td><td class="tipo">DECIMAL(8,2)</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Valor a pagar. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_VENCIMENTO</td><td class="tipo">DATE</td><td class="chave">Sim</td>
+        <td class="restr">&mdash;</td>
+        <td>Data de vencimento do título. <span class="tag-e">[E]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">DT_PAGAMENTO</td><td class="tipo">DATE</td><td class="chave">Não</td>
+        <td class="restr">Vazio = em aberto; vencido sem pagamento deve ser regularizado (RN05, A05)</td>
+        <td>Data em que o título foi pago. <span class="tag-m">[M]</span></td>
+      </tr>
+      <tr>
+        <td class="campo">ID_NF_ENTRADA</td><td class="tipo">INT</td><td class="chave">Não (FK)</td>
+        <td class="restr">FK &rarr; NF_ENTRADA, aceita nulo; CHECK <code>CHK_PAGAR_NF_MATERIA</code>: com nota, só MATERIA_PRIMA (RN22)</td>
+        <td>Nota de compra que originou o boleto. Fica vazia no custo fixo. <span class="tag-e">[E]</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="indices">
+    <strong>Índices:</strong> PK <code>ID_CONTA_PAGAR</code>; índice da FK em <code>ID_NF_ENTRADA</code>; índice em <code>DT_VENCIMENTO</code> (o que vence no período). <span class="tag-m">[M]</span>
+  </div>
+</div>
+
 
 <!-- ============ 5. LOG DE ACESSO ============ -->
 <div class="bloco" id="s5">
   <h2>5. Log de acesso (metadado operacional)</h2>
-  <p>As sete tabelas ficam sob o mesmo mecanismo de auditoria do SGBD: o plugin <code>audit_log</code> do
-  MySQL, configurado para gravar em formato JSON no caminho definido por <code>audit_log_file</code>. Na
-  ausência do plugin, a alternativa é o log geral (<code>general_log=ON</code>,
-  <code>log_output=TABLE</code>), consultável em <code>mysql.general_log</code>. A retenção e a rotação do
-  log seguem política própria, independente da retenção dos dados de negócio.</p>
-  <p>O log responde a uma lacuna que a própria loja aponta: hoje, quando um pedido sai errado, não há como
-  saber quem foi o responsável sem perguntar à equipe. Registrar quem leu e quem alterou cada pedido e cada
-  contagem de estoque é o primeiro passo para essa rastreabilidade, e é também o que sustenta o princípio
-  de responsabilização da LGPD (art. 6º, X). <span class="tag-e">[E]</span></p>
+  <p>As 22 tabelas ficam sob o mesmo mecanismo de auditoria do SGBD: o plugin <code>audit_log</code> do MySQL,
+  configurado para gravar em formato JSON no caminho definido por <code>audit_log_file</code>. Na ausência do plugin,
+  a alternativa é o log geral (<code>general_log=ON</code>, <code>log_output=TABLE</code>), consultável em
+  <code>mysql.general_log</code>. A retenção e a rotação do log seguem política própria, independente da retenção
+  dos dados de negócio. É configuração do servidor, e não do script.</p>
+  <p>O uso principal é registrar quem leu e quem alterou pedidos e estoque (RNF05 do README). O log complementa a <code>ETAPA_PEDIDO</code>: a etapa diz quem fez cada praça do pedido, e o log diz quem leu e
+  quem alterou cada registro, inclusive quem marcou um erro ou mudou uma contagem de estoque. Isso sustenta o princípio
+  de responsabilização e prestação de contas da LGPD (art. 6º, X). <span class="tag-e">[E]</span></p>
 </div>
 
 <!-- ============ 6. LGPD ============ -->
@@ -933,8 +1368,8 @@
   <h2>6. Acesso por operação e conformidade com a LGPD (metadado administrativo)</h2>
 
   <p>Os papéis abaixo são os que a loja já pratica: <strong>administrador master</strong> (dono ou sócio),
-  <strong>gerente</strong>, <strong>colaborador</strong> (cozinha e balcão) e
-  <strong>expedição/motoboy</strong>. <span class="tag-e">[E]</span></p>
+  <strong>gerente</strong>, <strong>colaborador</strong> (cozinha e balcão, incluindo o líder do turno) e
+  <strong>expedição/motoboy</strong>. <span class="tag-e">[E]</span> Os papéis usam os 3 perfis de <code>TP_PERFIL_ACESSO</code>: o líder do turno e a expedição/motoboy são colaboradores, com acesso só ao que a função pede. As linhas marcadas com <em>(nova)</em> são das tabelas que entraram na v1.2.</p>
 
   <table>
     <thead>
@@ -942,89 +1377,143 @@
     </thead>
     <tbody>
       <tr>
-        <td><code>CLIENTE</code></td>
+        <td><code>CLIENTE e TELEFONE_CLIENTE</code></td>
         <td>Colaborador (atendimento), Gerente, Admin master</td>
         <td>Colaborador, Gerente</td>
         <td>Colaborador, Gerente</td>
-        <td>Nenhum papel &mdash; apenas anonimização ao fim da retenção</td>
+        <td>Só Admin master, a pedido do titular e só para cliente sem pedido; com pedidos, o cadastro é anonimizado (RN24)</td>
       </tr>
       <tr>
-        <td><code>PEDIDO</code></td>
+        <td><code>PEDIDO e ITEM_PEDIDO</code></td>
         <td>Colaborador, Expedição (só o pedido em rota), Gerente, Admin master</td>
         <td>Colaborador</td>
-        <td>Colaborador (situação); cancelamento e estorno só Gerente ou Admin master</td>
-        <td>Nenhum papel &mdash; pedido errado se cancela, não se apaga</td>
+        <td>Colaborador (situação); cancelamento, estorno e alteração de itens só Gerente ou Admin master (RN14)</td>
+        <td>Nenhum papel: pedido errado se cancela, não se apaga (RN13)</td>
       </tr>
       <tr>
-        <td><code>PRODUTO</code></td>
+        <td><code>PRODUTO e UTILIZA</code></td>
         <td>Todos os papéis</td>
         <td>Gerente, Admin master</td>
-        <td>Colaborador (só <code>IN_DISPONIVEL</code>); preço e categoria só Gerente ou Admin master</td>
+        <td>Colaborador (só <code>IN_DISPONIVEL</code>); preço, categoria e ficha técnica só Gerente ou Admin master</td>
         <td>Admin master</td>
       </tr>
       <tr>
         <td><code>INGREDIENTE</code></td>
         <td>Colaborador, Gerente, Admin master</td>
-        <td>Colaborador (contagem do checklist)</td>
-        <td>Colaborador (validade e contagem); <code>QT_ESTOQUE_MINIMO</code> só Gerente ou Admin master</td>
+        <td>Gerente, Admin master</td>
+        <td>Colaborador (contagem e validade); <code>QT_ESTOQUE_MINIMO</code> só Gerente ou Admin master</td>
         <td>Admin master</td>
       </tr>
       <tr>
-        <td><code>FORNECEDOR</code></td>
+        <td><code>FORNECEDOR, TELEFONE_FORNECEDOR e DIA_ENTREGA</code></td>
         <td>Gerente, Admin master</td>
         <td>Gerente, Admin master</td>
         <td>Gerente, Admin master</td>
+        <td>Admin master</td>
+      </tr>
+      <tr>
+        <td><code>COMPRA e INCLUI</code></td>
+        <td>Gerente, Admin master</td>
+        <td>Gerente, Admin master</td>
+        <td>Gerente, Admin master; colaborador registra o recebimento</td>
         <td>Admin master</td>
       </tr>
       <tr>
         <td><code>FUNCIONARIO</code></td>
         <td>Gerente, Admin master</td>
         <td>Admin master</td>
-        <td>Admin master (perfil de acesso); Gerente (praças aptas)</td>
+        <td>Admin master (perfil de acesso)</td>
         <td>Admin master (desligamento)</td>
       </tr>
       <tr>
-        <td><code>COMPRA</code> <span class="tag-m">[M]</span></td>
-        <td>Gerente, Admin master</td>
+        <td><code>PRACA e TAREFA</code> <em>(nova)</em></td>
+        <td>Todos os papéis</td>
         <td>Gerente, Admin master</td>
         <td>Gerente, Admin master</td>
         <td>Admin master</td>
+      </tr>
+      <tr>
+        <td><code>ETAPA_PEDIDO</code> <em>(nova)</em></td>
+        <td>Gerente, Admin master; o colaborador vê as próprias etapas</td>
+        <td>Colaborador (ao trabalhar na praça)</td>
+        <td>Quem identifica o erro, na conferência do despacho ou numa reclamação: Colaborador ou Gerente (RN18)</td>
+        <td>Nenhum papel: o histórico de erros é mantido</td>
+      </tr>
+      <tr>
+        <td><code>TREINA</code> <em>(nova)</em></td>
+        <td>Gerente, Admin master; o colaborador vê o próprio treino</td>
+        <td>Gerente</td>
+        <td>Gerente (habilitação)</td>
+        <td>Admin master</td>
+      </tr>
+      <tr>
+        <td><code>EXECUCAO_TAREFA</code> <em>(nova)</em></td>
+        <td>Gerente, Admin master; o colaborador vê as próprias execuções</td>
+        <td>Líder do turno, Gerente</td>
+        <td>Líder do turno, Gerente</td>
+        <td>Admin master</td>
+      </tr>
+      <tr>
+        <td><code>NF_SAIDA e CONTA_RECEBER</code> <em>(nova)</em></td>
+        <td>Admin master (faturamento, RN15)</td>
+        <td>Admin master</td>
+        <td>Admin master</td>
+        <td>Nenhum papel: documento fiscal e financeiro é mantido</td>
+      </tr>
+      <tr>
+        <td><code>NF_ENTRADA</code> <em>(nova)</em></td>
+        <td>Gerente, Admin master</td>
+        <td>Quem recebe a mercadoria (Colaborador ou Gerente), no recebimento</td>
+        <td>Admin master</td>
+        <td>Nenhum papel: documento fiscal é mantido</td>
+      </tr>
+      <tr>
+        <td><code>CONTA_PAGAR</code> <em>(nova)</em></td>
+        <td>Gerente, Admin master</td>
+        <td>Admin master</td>
+        <td>Admin master (pagamento, conta bancária, RN15)</td>
+        <td>Nenhum papel: documento financeiro é mantido</td>
       </tr>
     </tbody>
   </table>
 
   <h3>Dados pessoais tratados</h3>
-  <p><code>CLIENTE</code> e <code>FUNCIONARIO</code> contêm dado pessoal na acepção do art. 5º, I da LGPD.
-  <strong>Nenhuma tabela deste modelo contém dado pessoal sensível</strong> (art. 5º, II): não há informação
-  de saúde, origem racial, convicção religiosa ou filiação sindical.</p>
+  <p><code>CLIENTE</code> (com <code>TELEFONE_CLIENTE</code>) e <code>FUNCIONARIO</code> contêm dado pessoal na
+  acepção do art. 5º, I da LGPD. <code>ETAPA_PEDIDO</code>, <code>TREINA</code> e <code>EXECUCAO_TAREFA</code> não
+  guardam nome nem contato, mas ligam o desempenho a um funcionário pela chave estrangeira e seguem as mesmas regras de
+  acesso do cadastro dele. <strong>Nenhuma tabela deste modelo contém dado
+  pessoal sensível</strong> (art. 5º, II): não há informação de saúde, origem racial, convicção religiosa ou filiação
+  sindical.</p>
 
   <ul class="limpa">
-    <li><strong>Cliente &mdash; nome, telefone e endereço.</strong> Base legal: execução de contrato
-    (art. 7º, V). São os dados sem os quais a entrega não acontece. Acesso restrito a quem atende e a quem
-    entrega, e a expedição vê apenas o pedido que está em rota.</li>
-    <li><strong>Cliente &mdash; data de nascimento.</strong> Base legal distinta: consentimento
-    (art. 7º, I), porque é coletada para ação de relacionamento e não para executar a venda. Por isso o
-    campo é opcional; a recusa do cliente não pode impedir a compra.</li>
-    <li><strong>Funcionário.</strong> Base legal: cumprimento de obrigação legal e execução do contrato de
-    trabalho (art. 7º, II e V). <code>TP_PERFIL_ACESSO</code> é, ele próprio, um controle de segurança: é o
-    campo que restringe faturamento e conta bancária ao administrador master.</li>
-    <li><strong>Retenção e eliminação.</strong> Encerrado o prazo de guarda, o cadastro de cliente é
-    <strong>anonimizado</strong>, não apagado: o histórico de venda continua servindo à estatística de
-    consumo sem identificar a pessoa. Nenhum papel recebe permissão de <em>DELETE</em> sobre dado pessoal
-    de cliente.</li>
+    <li><strong>Cliente &mdash; nome, telefone e endereço.</strong> Base legal: execução de contrato (art. 7º, V). São
+    os dados sem os quais a entrega não acontece. Acesso restrito a quem atende e a quem entrega, e a expedição vê
+    apenas o pedido que está em rota.</li>
+    <li><strong>Cliente &mdash; data de nascimento.</strong> Base legal distinta: consentimento (art. 7º, I), porque é
+    coletada para ação de relacionamento e não para executar a venda. Por isso o campo é opcional; a recusa do cliente
+    não pode impedir a compra.</li>
+    <li><strong>Funcionário.</strong> Base legal: cumprimento de obrigação legal e execução do contrato de trabalho
+    (art. 7º, II e V). <code>TP_PERFIL_ACESSO</code> é, ele próprio, um controle de segurança: é o campo que restringe
+    faturamento e conta bancária ao administrador master.</li>
+    <li><strong>Desempenho do funcionário</strong> (erros por etapa, tempo de tarefa, tempo de treino). Finalidade
+    (art. 6º, I): organizar a equipe e melhorar o treino, como pediu o responsável. O acesso fica com a gestão, e cada
+    colaborador vê os próprios registros. <span class="tag-m">[M]</span></li>
+    <li><strong>Retenção e eliminação (RN24).</strong> O cliente que nunca fez pedido pode ter o cadastro eliminado a
+    pedido dele, como no <code>DELETE</code> do passo 7 do script. O cliente com pedidos é <strong>anonimizado</strong>
+    ao fim do prazo de guarda (a definir com o responsável), e não apagado, porque as vendas e as notas precisam ser mantidas; a chave estrangeira sem
+    exclusão em cascata impede apagar um cliente com pedidos.</li>
   </ul>
 
   <div class="alerta">
-    <strong>Privacidade nos exemplos.</strong> Qualquer valor de exemplo usado neste dicionário é
-    fictício, ainda que coerente com a operação observada em campo. Nenhum dado real de cliente ou de
-    funcionário da loja foi transcrito para este documento.
+    <strong>Privacidade nos exemplos.</strong> Qualquer valor de exemplo usado neste dicionário e na massa de dados é
+    fictício, ainda que coerente com a operação observada em campo. Nenhum dado real de cliente ou de funcionário da
+    loja foi transcrito para este documento.
   </div>
 </div>
 
 <footer>
-  Dicionário de Dados &mdash; Vaca na Faca (Vaca&rsquo;s) &middot; Entrega 1, Modelagem de Banco de
-  Dados &middot; Prof. Cid Andrade &middot;
-  Fontes: DER, entrevista e material da disciplina.
+  Dicionário de Dados &mdash; Vaca na Faca (Vaca&rsquo;s) &middot; Entrega 2, Modelagem de Banco de Dados &middot;
+  Prof. Cid Andrade &middot; Fontes: DER, modelo lógico, script SQL, entrevista e material da disciplina.
 </footer>
 
 </body>

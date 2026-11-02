@@ -1085,7 +1085,7 @@ O grupo usou o **Claude** (Anthropic), pelo Claude Code. Cada uso relevante est�
 | **Fontes consultadas e verificadas** | Os PDFs da disciplina (Construção de Dicionário de Dados e o exemplo `02-03g`), a imagem do DER e as transcrições da entrevista. O grupo conferiu cada apontamento antes de aceitar. |
 | **Trechos rejeitados ou corrigidos** | O DER foi tratado como fonte da verdade e não foi alterado pela IA nessa etapa. Os pedidos explícitos foram seguir só a estrutura da entrega e "não inventar moda". |
 | **Justificativa da escolha final** | A IA serviu como revisora e redatora a partir dos dados levantados pelo grupo. O conteúdo (entidades, atributos e regras) veio da entrevista. |
-| **Reflexão crítica** | As sugestões de cardinalidade dependiam da leitura da imagem do DER e precisaram da confirmação do grupo. Na Entrega 2, o grupo descobriu que a leitura usada estava invertida (ver 6.4). |
+| **Reflexão crítica** | As sugestões de cardinalidade dependiam da leitura da imagem do DER e precisaram da confirmação do grupo. Na Entrega 2, o grupo descobriu que a leitura usada estava invertida (ver "Leitura das cardinalidades", na seção 1.1). |
 
 #### Auxílio nos comandos SQL do script (31/10 e 01/11/2026)
 
@@ -1150,7 +1150,7 @@ O grupo usou o **Claude** (Anthropic), pelo Claude Code. Cada uso relevante est�
 | **Fontes consultadas e verificadas** | A seção 7 do esqueleto e os slides da Entrega 2 do professor (ordem do pitch e regras da apresentação). Os números mostrados nos slides vêm da saída real do MySQL. |
 | **Trechos rejeitados ou corrigidos** | **[COMPLETAR depois de montar os slides: o que o grupo mudou no texto, na ordem ou nas imagens sugeridas pela IA.]** |
 | **Justificativa da escolha final** | Seguir a ordem pedida e mostrar o SQL por prints, já que não haverá demonstração ao vivo. |
-| **Reflexão crítica** | Os prints são a saída do MySQL redesenhada (ver 6.9), e não capturas do Workbench, com exceção do `03c` e do `07a`. Num slide, a consulta precisa caber na tela com letra grande, então as consultas longas aparecem só com o trecho principal. |
+| **Reflexão crítica** | Os prints são a saída do MySQL redesenhada (ver o registro "Prints da execução", acima), e não capturas do Workbench, com exceção do `03c` e do `07a`. Num slide, a consulta precisa caber na tela com letra grande, então as consultas longas aparecem só com o trecho principal. |
 
 ---
 

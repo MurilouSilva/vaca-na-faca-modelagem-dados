@@ -1030,7 +1030,7 @@ O repositório segue os 5 itens pedidos para a seção 5:
 
 &nbsp;
 
-Os slides da apresentação ficam em [`apresentacao/slides.pdf`](apresentacao/slides.pdf).
+Os slides da apresentação ficam em [`apresentacao/slides.pptx`](apresentacao/slides.pptx).
 
 **Estrutura do repositório:**
 
@@ -1047,7 +1047,7 @@ vaca-na-faca-modelagem-dados/
 │   ├── script.sql             script SQL completo, com a massa de dados
 │   └── prints/                prints da execução (01 a 10)
 └── apresentacao/
-    └── slides.pdf             slides do pitch
+    └── slides.pptx            slides do pitch
 ```
 
 Os commits são feitos por cada integrante, com a própria conta do GitHub (ver a tabela de integrantes), ao longo do desenvolvimento.
@@ -1156,7 +1156,7 @@ O grupo usou o **Claude** (Anthropic), pelo Claude Code. Cada uso relevante est�
 
 ## 7. Apresentação Corporativa Final
 
-Pitch de 8 minutos, só com slides, sem blocos longos de texto. Slides: [`apresentacao/slides.pdf`](apresentacao/slides.pdf).
+Pitch de 8 minutos, só com slides, sem blocos longos de texto. Slides: [`apresentacao/slides.pptx`](apresentacao/slides.pptx).
 
 | Ordem | Parte do pitch | Material |
 | :---- | :---- | :---- |
